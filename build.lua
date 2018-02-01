@@ -333,6 +333,7 @@ function run_wordgrinder_tests(exe, luapackage, frontend, buildstyle)
         "tests/weirdness-word-right-to-last-word-in-doc.lua",
         "tests/windows-installdir.lua",
         "tests/xpattern.lua",
+	"tests/import-functions.lua",
     }) do
         local stampfile = OBJDIR.."/"..name.."/"..test..".stamp"
         alltests[#alltests+1] = stampfile

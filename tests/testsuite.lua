@@ -133,6 +133,10 @@ function SaveGlobalSettings(f)
 	end
 end
 
+function AssertClass(t, c)
+	AssertEquals(GetClass(t), c)
+end
+
 GlobalSettings.systemdictionary.filename = nil
 
 return {}

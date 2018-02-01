@@ -19,7 +19,7 @@ local table_concat = table.concat
 -----------------------------------------------------------------------------
 -- The importer itself.
 
-local function loadhtmlfile(fp)
+local function loadhtmlfile(fp, document)
 	local data = fp:read("*a")
 
 	-- Collapse whitespace; this makes things far easier to parse.
@@ -75,9 +75,6 @@ local function loadhtmlfile(fp)
 		end
 	end
 
-	-- Define the element look-up table.
-	
-	local document = CreateDocument()
 	local importer = CreateImporter(document)
 	local style = "P"
 	local pre = false
@@ -99,6 +96,8 @@ local function loadhtmlfile(fp)
 	end
 
 	local elements =
+
+	-- Define the element look-up table.
 	{
 		[" "] = flushword,
 		["<p>"] = flush,
@@ -149,6 +148,6 @@ local function loadhtmlfile(fp)
 	return document
 end
 
-function Cmd.ImportHTMLFile(filename)
-	return ImportFileWithUI(filename, "Import HTML File", loadhtmlfile)
+function Cmd.ImportHTMLFile(filename, document)
+	return ImportFileWithUI(filename, "Import HTML File", loadhtmlfile, document)
 end

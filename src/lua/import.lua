@@ -88,7 +88,7 @@ end
 
 -- Does the standard selector-box-and-progress UI for each importer.
 
-function ImportFileWithUI(filename, title, callback)
+function ImportFileWithUI(filename, title, callback, document)
 	if not filename then
 		filename = FileBrowser(title, "Import from:", false)
 		if not filename then
@@ -98,16 +98,37 @@ function ImportFileWithUI(filename, title, callback)
 
 	ImmediateMessage("Importing...")
 
-	-- Actually import the file.
-
 	local fp = io.open(filename)
 	if not fp then
 		return nil
 	end
 
-	local document = callback(fp)
+	local docname = Leafname(filename)
+
 	if not document then
-		ModalMessage(nil, "The import failed, probably because the file could not be found.")
+		document = CreateDocument()
+
+		--we didn't pass a document object in, so the DocumentSet stuff needs handling here
+		if DocumentSet.documents[docname] then
+			local id = 1
+			while true do
+				local f = docname.."-"..id
+				if not DocumentSet.documents[f] then
+					docname = f
+					break
+				end
+			end
+		end
+
+		DocumentSet:addDocument(document, docname)
+
+	end
+
+	-- Actually import the file.
+	document = callback(fp, document)
+
+	if not document[1] then
+		ModalMessage(nil, "The import of file, "..docname.." failed, probably because the file could not be found.")
 		QueueRedraw()
 		return false
 	end
@@ -120,24 +141,6 @@ function ImportFileWithUI(filename, title, callback)
 	if (#document > 1) then
 		document:deleteParagraphAt(1)
 	end
-
-	-- Add the document to the document set.
-
-	local docname = Leafname(filename)
-
-	if DocumentSet.documents[docname] then
-		local id = 1
-		while true do
-			local f = docname.."-"..id
-			if not DocumentSet.documents[f] then
-				docname = f
-				break
-			end
-		end
-	end
-
-	DocumentSet:addDocument(document, docname)
-	DocumentSet:setCurrent(docname)
 
 	QueueRedraw()
 	return true

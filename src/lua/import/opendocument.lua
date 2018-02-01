@@ -191,7 +191,7 @@ local function import_paragraphs(styles, importer, xml, defaultstyle)
 	end
 end
 
-function Cmd.ImportODTFile(filename)
+function Cmd.ImportODTFile(filename, document)
 	if not filename then
 		filename = FileBrowser("Import ODT File", "Import from:", false)
 		if not filename then
@@ -222,9 +222,27 @@ function Cmd.ImportODTFile(filename)
 	collect_styles(styles, contentxml)
 	resolve_parent_styles(styles)
 
+	if not document then
+		document = CreateDocument()
+		local docname = Leafname(filename)
+
+		--we didn't pass a document object in, so the DocumentSet stuff needs handling here
+		if DocumentSet.documents[docname] then
+			local id = 1
+			while true do
+				local f = docname.."-"..id
+				if not DocumentSet.documents[f] then
+					docname = f
+					break
+				end
+			end
+		end
+
+		DocumentSet:addDocument(document, docname)
+
+	end
+
 	-- Actually import the content.
-	
-	local document = CreateDocument()
 	local importer = CreateImporter(document)
 	importer:reset()
 
@@ -246,24 +264,6 @@ function Cmd.ImportODTFile(filename)
 	if (#document > 1) then
 		document:deleteParagraphAt(1)
 	end
-	
-	-- Add the document to the document set.
-	
-	local docname = Leafname(filename)
-
-	if DocumentSet.documents[docname] then
-		local id = 1
-		while true do
-			local f = docname.."-"..id
-			if not DocumentSet.documents[f] then
-				docname = f
-				break
-			end
-		end
-	end
-	
-	DocumentSet:addDocument(document, docname)
-	DocumentSet:setCurrent(docname)
 
 	QueueRedraw()
 	return true

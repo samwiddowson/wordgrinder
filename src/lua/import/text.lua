@@ -18,18 +18,16 @@ local table_concat = table.concat
 -----------------------------------------------------------------------------
 -- The importer itself.
 
-local function loadtextfile(fp)
-	local document = CreateDocument()
+local function loadtextfile(fp, document)
 	for l in fp:lines() do
 		l = CanonicaliseString(l)
 		l = l:gsub("%c+", "")
 		local p = CreateParagraph("P", ParseStringIntoWords(l))
 		document:appendParagraph(p)
 	end
-
 	return document
 end
 
-function Cmd.ImportTextFile(filename)
-	return ImportFileWithUI(filename, "Import Text File", loadtextfile)
+function Cmd.ImportTextFile(filename, document)
+	return ImportFileWithUI(filename, "Import Text File", loadtextfile, document)
 end
