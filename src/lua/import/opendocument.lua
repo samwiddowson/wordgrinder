@@ -242,6 +242,8 @@ function Cmd.ImportODTFile(filename, document)
 
 	end
 
+	
+	document.ioFormat = FileFormats.ODT
 	-- Actually import the content.
 	local importer = CreateImporter(document)
 	importer:reset()

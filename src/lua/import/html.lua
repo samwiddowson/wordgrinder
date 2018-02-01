@@ -144,7 +144,8 @@ local function loadhtmlfile(fp, document)
 		end
 	end
 	flush()
-
+	
+	document.ioFormat = FileFormats.HTML
 	return document
 end
 

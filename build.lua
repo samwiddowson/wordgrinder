@@ -334,6 +334,7 @@ function run_wordgrinder_tests(exe, luapackage, frontend, buildstyle)
         "tests/windows-installdir.lua",
         "tests/xpattern.lua",
 	"tests/import-functions.lua",
+	"tests/default-io-format.lua"
     }) do
         local stampfile = OBJDIR.."/"..name.."/"..test..".stamp"
         alltests[#alltests+1] = stampfile

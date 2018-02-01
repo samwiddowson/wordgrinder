@@ -1,8 +1,9 @@
 require("tests/testsuite")
 
-local function run_import_format_test(importer, filename)
+local function run_import_format_test(importer, filename, fileformat)
 
 	local function test_document_content(document)
+		AssertEquals(fileformat, document.ioFormat)
 		--get first paragraph
 		local para = document[1]
 
@@ -31,6 +32,7 @@ local function run_import_format_test(importer, filename)
 	test_document_content(doc)
 end
 
-run_import_format_test(Cmd.ImportTextFile, "testdocs/test.txt")
-run_import_format_test(Cmd.ImportHTMLFile, "testdocs/test.html")
-run_import_format_test(Cmd.ImportODTFile, "testdocs/test.odt")
+
+run_import_format_test(Cmd.ImportTextFile, "testdocs/test.txt", FileFormats.TEXT)
+run_import_format_test(Cmd.ImportHTMLFile, "testdocs/test.html", FileFormats.HTML)
+run_import_format_test(Cmd.ImportODTFile, "testdocs/test.odt", FileFormats.ODT)

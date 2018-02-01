@@ -25,6 +25,8 @@ local function loadtextfile(fp, document)
 		local p = CreateParagraph("P", ParseStringIntoWords(l))
 		document:appendParagraph(p)
 	end
+	
+	document.ioFormat = FileFormats.TEXT
 	return document
 end
 
