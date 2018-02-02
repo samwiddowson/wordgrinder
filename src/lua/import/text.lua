@@ -27,7 +27,7 @@ local function loadtextfile(fp, document)
 	end
 	
 	document.ioFormat = FileFormats.TEXT
-	return document
+	return true
 end
 
 function Cmd.ImportTextFile(filename, document)

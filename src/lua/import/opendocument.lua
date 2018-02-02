@@ -199,14 +199,14 @@ function Cmd.ImportODTFile(filename, document)
 		end
 	end
 	
-	ImmediateMessage("Importing...")	
+	ImmediateMessage("Importing "..filename.."...")	
 
 	-- Load the styles and content subdocuments.
 	
 	local stylesxml = ReadFromZip(filename, "styles.xml")
 	local contentxml = ReadFromZip(filename, "content.xml")
 	if not stylesxml or not contentxml then
-		ModalMessage(nil, "The import failed, probably because the file could not be found.")
+		ModalMessage(nil, "The import of "..filename.." failed, probably because the file could not be found.")
 		QueueRedraw()
 		return false
 	end
@@ -270,4 +270,3 @@ function Cmd.ImportODTFile(filename, document)
 	QueueRedraw()
 	return true
 end
-

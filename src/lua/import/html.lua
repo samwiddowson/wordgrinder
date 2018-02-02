@@ -146,7 +146,7 @@ local function loadhtmlfile(fp, document)
 	flush()
 	
 	document.ioFormat = FileFormats.HTML
-	return document
+	return true
 end
 
 function Cmd.ImportHTMLFile(filename, document)

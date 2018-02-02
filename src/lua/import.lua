@@ -96,13 +96,13 @@ function ImportFileWithUI(filename, title, callback, document)
 		end
 	end
 
-	ImmediateMessage("Importing...")
+	ImmediateMessage("Importing "..filename.."...")
 
 	local fp = io.open(filename)
 	if not fp then
-		return nil
+		ModalMessage(nil, "The import failed because file "..filename.." could not be opened.")
+		return false
 	end
-
 	local docname = Leafname(filename)
 
 	if not document then
@@ -125,10 +125,10 @@ function ImportFileWithUI(filename, title, callback, document)
 	end
 
 	-- Actually import the file.
-	document = callback(fp, document)
+	local importsuccess = callback(fp, document)
 
-	if not document[1] then
-		ModalMessage(nil, "The import of file, "..docname.." failed, probably because the file could not be found.")
+	if not importsuccess then
+		ModalMessage(nil, "The import of file, "..filename.." failed.")
 		QueueRedraw()
 		return false
 	end
