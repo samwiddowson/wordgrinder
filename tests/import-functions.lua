@@ -35,3 +35,4 @@ end
 run_import_format_test(Cmd.ImportTextFile, "testdocs/test.txt", FileFormats.TEXT)
 run_import_format_test(Cmd.ImportHTMLFile, "testdocs/test.html", FileFormats.HTML)
 run_import_format_test(Cmd.ImportODTFile, "testdocs/test.odt", FileFormats.ODT)
+run_import_format_test(Cmd.ImportWGFile, "testdocs/test.wgd", FileFormats.WORDGRINDER)
