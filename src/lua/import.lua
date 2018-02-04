@@ -142,6 +142,8 @@ function ImportFileWithUI(filename, title, callback, document)
 		document:deleteParagraphAt(1)
 	end
 
+	DocumentSet:setCurrent(docname)
+
 	QueueRedraw()
 	return true
 end
