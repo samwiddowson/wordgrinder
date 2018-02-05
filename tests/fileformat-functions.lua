@@ -11,7 +11,6 @@ AssertClass( Cmd.ImportODTFile, GetImportFunction(FileFormats.ODT) )
 AssertClass( Cmd.ImportTextFile, GetImportFunction(FileFormats.TEXT) )
 AssertClass( Cmd.ImportWGFile, GetImportFunction(FileFormats.WORDGRINDER) )
 
-
 AssertClass( Cmd.ExportHTMLFile, GetExportFunction(FileFormats.HTML) )
 AssertClass( Cmd.ExportLatexFile, GetExportFunction(FileFormats.LATEX) )
 AssertClass( Cmd.ExportMarkdownFile, GetExportFunction(FileFormats.MARKDOWN) )

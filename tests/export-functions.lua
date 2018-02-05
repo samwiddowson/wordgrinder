@@ -10,6 +10,7 @@ local function run_export_format_test(exporter, comparison_filename)
 	local export_filename = os.tmpname()
 
 	Document = CreateDocument()
+	Document.name = "main"
 	Document[1] = CreateParagraph("P", "This is a test.")
 
 	exporter(export_filename)
@@ -21,3 +22,8 @@ local function run_export_format_test(exporter, comparison_filename)
 end
 
 run_export_format_test(Cmd.ExportWGFile, "testdocs/test.wgd")
+run_export_format_test(Cmd.ExportTextFile, "testdocs/test.txt")
+run_export_format_test(Cmd.ExportHTMLFile, "testdocs/test.html")
+run_export_format_test(Cmd.ExportMarkdownFile, "testdocs/test.md")
+run_export_format_test(Cmd.ExportTroffFile, "testdocs/test.tr")
+run_export_format_test(Cmd.ExportLatexFile, "testdocs/test.tex")
