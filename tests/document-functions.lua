@@ -37,6 +37,13 @@ AssertEquals(true, document_set_changed())
 AssertEquals(false, document_changed(testdoc1))
 AssertEquals(true, document_changed(testdoc2))
 
+--getChangedDocs
+local changeddocs = {}
+changeddocs = DocumentSet:getChangedDocumentList()
+
+AssertEquals(1, #changeddocs)
+AssertEquals("test2", changeddocs[1].name)
+
 --documentset clean and doc clean
 DocumentSet:clean("test1")
 
@@ -46,3 +53,5 @@ AssertEquals(true, document_changed(testdoc2))
 
 testdoc2:clean()
 AssertEquals(false, document_changed(testdoc2))
+
+--set file path and get by filepath

@@ -59,6 +59,18 @@ DocumentSetClass =
 		return self.documents
 	end,
 
+	getChangedDocumentList = function(self)
+		local changeddocs = {}
+		local index = 1
+		for i, d in ipairs(self.documents) do
+			if d.changed then
+				changeddocs[index] = d
+				index = index + 1
+			end
+		end
+		return changeddocs
+	end,
+
 	_findDocument = function(self, name)
 		for i, d in ipairs(self.documents) do
 			if (d.name == name) then
