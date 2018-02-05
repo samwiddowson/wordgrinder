@@ -93,6 +93,15 @@ DocumentSetClass =
 		return document
 	end,
 
+	findDocumentByFilename = function(self, filename)
+		for i, d in ipairs(self.documents) do
+			if d.filename == filename then
+				return d
+			end
+		end
+		return nil
+	end,
+
 	addDocument = function(self, document, name, index)
 		document.name = name
 
@@ -674,7 +683,8 @@ function CreateDocument()
 		cw = 1,
 		co = 1,
 		filetype = GetDefaultIoFormat(),
-		changed = nil
+		changed = nil,
+		filename = nil
 	}
 
 	setmetatable(d, {__index = DocumentClass})

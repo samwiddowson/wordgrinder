@@ -55,3 +55,5 @@ testdoc2:clean()
 AssertEquals(false, document_changed(testdoc2))
 
 --set file path and get by filepath
+testdoc1.filename = "meh"
+AssertEquals("test1", DocumentSet:findDocumentByFilename("meh").name)
