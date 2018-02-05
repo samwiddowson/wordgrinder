@@ -55,9 +55,9 @@ local function callback(writer, document)
 	})
 end
 
-function Cmd.ExportTextFile(filename)
+function Cmd.ExportTextFile(filename, document)
 	return ExportFileWithUI(filename, "Export Text File", ".txt",
-		callback)
+		callback, document)
 end
 
 function Cmd.ExportToTextString()

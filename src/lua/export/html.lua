@@ -144,9 +144,9 @@ local function callback(writer, document)
 	})
 end
 
-function Cmd.ExportHTMLFile(filename)
+function Cmd.ExportHTMLFile(filename, document)
 	return ExportFileWithUI(filename, "Export HTML File", ".html",
-		callback)
+		callback, document)
 end
 
 -----------------------------------------------------------------------------

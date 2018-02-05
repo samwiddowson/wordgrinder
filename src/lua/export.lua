@@ -71,7 +71,7 @@ function ExportFileUsingCallbacks(document, cb)
 		oldbold = bold
 	end
 
-	for _, paragraph in ipairs(Document) do
+	for _, paragraph in ipairs(document) do
 		local name = paragraph.style
 
 		if (name == "L") or (name == "LB") then
@@ -136,9 +136,13 @@ end
 -- Prompts the user to export a document, and then calls
 -- exportcb(writer, document) to actually do the work.
 
-function ExportFileWithUI(filename, title, extension, callback)
+function ExportFileWithUI(filename, title, extension, callback, document)
+	if not document then
+		document = Document
+	end
+
 	if not filename then
-		filename = Document.name
+		filename = document.name
 		if filename then
 			if not filename:find("%..-$") then
 				filename = filename .. extension
@@ -172,7 +176,7 @@ function ExportFileWithUI(filename, title, extension, callback)
 		fpw(fp, ...)
 	end
 
-	callback(writer, Document)
+	callback(writer, document)
 	fp:close()
 
 	QueueRedraw()

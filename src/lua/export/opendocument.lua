@@ -131,9 +131,12 @@ local function callback(writer, document)
 	})
 end
 
-local function export_odt_with_ui(filename, title, extension)
+local function export_odt_with_ui(filename, title, extension, document)
+	if not document then
+		document = Document
+	end
 	if not filename then
-		filename = Document.name
+		filename = document.name
 		if filename then
 			if not filename:find("%..-$") then
 				filename = filename .. extension
@@ -160,7 +163,7 @@ local function export_odt_with_ui(filename, title, extension)
 	local writer = function(s)
 		content[#content+1] = s
 	end
-	callback(writer, Document)
+	callback(writer, document)
 	content = table_concat(content)
 	
 	local xml =
@@ -338,6 +341,6 @@ local function export_odt_with_ui(filename, title, extension)
 	return true
 end
 
-function Cmd.ExportODTFile(filename)
-	return export_odt_with_ui(filename, "Export ODT File", ".odt")
+function Cmd.ExportODTFile(filename, document)
+	return export_odt_with_ui(filename, "Export ODT File", ".odt", document)
 end

@@ -171,7 +171,7 @@ local function callback(writer, document)
 	})
 end
 
-function Cmd.ExportTroffFile(filename)
+function Cmd.ExportTroffFile(filename, document)
 	return ExportFileWithUI(filename, "Export Troff File", ".tr",
-		callback)
+		callback, document)
 end

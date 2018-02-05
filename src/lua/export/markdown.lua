@@ -108,6 +108,6 @@ local function callback(writer, document)
 	})
 end
 
-function Cmd.ExportMarkdownFile(filename)
-	return ExportFileWithUI(filename, "Export Markdown File", ".md", callback)
+function Cmd.ExportMarkdownFile(filename, document)
+	return ExportFileWithUI(filename, "Export Markdown File", ".md", callback, document)
 end

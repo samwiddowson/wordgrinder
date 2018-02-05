@@ -21,6 +21,6 @@ local function exportwordgrinder(write, document)
 end 
 
 
-function Cmd.ExportWGFile(filename)
-	return ExportFileWithUI(filename, "Export native WordGrider file", ".wgd", exportwordgrinder)
+function Cmd.ExportWGFile(filename, document)
+	return ExportFileWithUI(filename, "Export native WordGrider file", ".wgd", exportwordgrinder, document)
 end

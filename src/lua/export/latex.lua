@@ -112,7 +112,7 @@ local function callback(writer, document)
 	})
 end
 
-function Cmd.ExportLatexFile(filename)
+function Cmd.ExportLatexFile(filename, document)
 	return ExportFileWithUI(filename, "Export LaTeX File", ".tex",
-		callback)
+		callback, document)
 end
