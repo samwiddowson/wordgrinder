@@ -334,9 +334,9 @@ function run_wordgrinder_tests(exe, luapackage, frontend, buildstyle)
         "tests/windows-installdir.lua",
         "tests/xpattern.lua",
 	"tests/import-functions.lua",
-	"tests/default-io-format.lua",
 	"tests/export-functions.lua",
 	"tests/document-functions.lua",
+	"tests/fileformat-functions.lua",
     }) do
         local stampfile = OBJDIR.."/"..name.."/"..test..".stamp"
         alltests[#alltests+1] = stampfile
@@ -459,6 +459,7 @@ emit("build ", OBJDIR.."/luascripts.c: luascripts ", table.concat({
     "src/lua/margin.lua",
     "src/lua/xpattern.lua",
     "src/lua/fileio.lua",
+    "src/lua/filetypes.lua",
     "src/lua/export.lua",
     "src/lua/export/text.lua",
     "src/lua/export/html.lua",

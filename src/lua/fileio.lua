@@ -37,25 +37,6 @@ local PARAGRAPHCLASS = 102
 local WORDCLASS = 103
 local MENUCLASS = 104
 
-FileFormats = {}
-
-FileFormats.HTML = "HTML"
-FileFormats.LATEX = "LATEX"
-FileFormats.MARKDOWN = "Markdown"
-FileFormats.ODT = "OpenDocument"
-FileFormats.RTF = "RTF"
-FileFormats.TEXT = "Text"
-FileFormats.TROFF = "TROFF"
-FileFormats.WORDGRINDER= "WordGrinder"
-
-function GetDefaultIoFormat()
-	if not GlobalSettings.defaultiofileformat then
-		GlobalSettings.defaultiofileformat = FileFormats.WORDGRINDER
-		SaveGlobalSettings()
-	end
-	return GlobalSettings.defaultiofileformat
-end
-
 local function writetostream(object, write, writeo)
 	local function save(key, t, force)
 		if (type(t) == "table") then
