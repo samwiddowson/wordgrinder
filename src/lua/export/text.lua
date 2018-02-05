@@ -3,6 +3,8 @@
 -- file in this distribution for the full text.
 
 local function callback(writer, document)
+
+	document.filetype = FileFormats.TEXT
 	return ExportFileUsingCallbacks(document,
 	{
 		prologue = function()

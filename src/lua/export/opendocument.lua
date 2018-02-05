@@ -337,6 +337,7 @@ local function export_odt_with_ui(filename, title, extension, document)
 		return false
 	end
 		
+	document.filetype = FileFormats.OPENDOCUMENT
 	QueueRedraw()
 	return true
 end
