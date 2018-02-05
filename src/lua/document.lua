@@ -650,6 +650,7 @@ function CreateDocument()
 		cp = 1,
 		cw = 1,
 		co = 1,
+		filetype = GetDefaultIoFormat()
 	}
 
 	setmetatable(d, {__index = DocumentClass})
