@@ -164,21 +164,35 @@ function ExportFileWithUI(filename, title, extension, callback, document)
 	end
 
 	ImmediateMessage("Exporting...")
-	local fp, e = io.open(filename, "w")
-	if not fp then
-		ModalMessage(nil, "Unable to open the output file "..e..".")
+
+	local filewriter = CreateFileWriter(filename)
+
+	if filewriter.err then
+		ModalMessage(nil, "There was a problem opening the output file: "..filewriter.err..".")
 		QueueRedraw()
 		return false
 	end
 
-	local fpw = fp.write
-	local writer = function(...)
-		fpw(fp, ...)
+	local fileopensuccess = filewriter:open()
+
+	if not fileopensuccess then
+		ModalMessage(nil, "Unable to open the output file "..filewriter.err..".")
+		QueueRedraw()
+		return false
 	end
 
-	callback(writer, document)
-	fp:close()
+	local write = function(...)
+		filewriter:writeToBuffer(table.concat({...}))
+	end
 
+	callback(write, document)
+	filewriter:finalize()
+
+	if filewriter.err then
+		ModalMessage(nil, "There was a problem saving the data to the output file "..filewriter.err..".")
+		QueueRedraw()
+		return false
+	end
 	QueueRedraw()
 	return true
 end

@@ -3,7 +3,7 @@
 -- file in this distribution for the full text.
 
 -----------------------------------------------------------------------------
--- The importer itself.
+-- The exporter itself.
 
 local function exportwordgrinder(write, document)
 	for _, p in ipairs(document) do

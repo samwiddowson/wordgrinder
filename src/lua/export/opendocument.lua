@@ -331,12 +331,21 @@ local function export_odt_with_ui(filename, title, extension, document)
 		["content.xml"] = content
 	}
 	
-	if not writezip(filename, xml) then
+	if not writezip(filename..".new", xml) then
 		ModalMessage(nil, "Unable to open the output file "..e..".")
 		QueueRedraw()
 		return false
 	end
-		
+
+	--Do the "filename dance" to give a little extra stability to our limited ODT support...
+	local r, e = os.rename(filename, filename..".old")
+	if not e then
+		r, e = os.rename(filename..".new", filename)
+	end
+	if not e then
+		r, e = os.remove(filename..".old")
+	end
+
 	document.filetype = FileFormats.OPENDOCUMENT
 	QueueRedraw()
 	return true
