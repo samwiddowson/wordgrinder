@@ -4,7 +4,6 @@
 
 local function callback(writer, document)
 
-	document.filetype = FileFormats.TEXT
 	return ExportFileUsingCallbacks(document,
 	{
 		prologue = function()

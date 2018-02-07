@@ -43,7 +43,6 @@ local function callback(writer, document)
 	local currentpara = nil
 	local islist = false
 
-	document.filetype = FileFormats.HTML
 	function changepara(newpara)
 		local currentstyle = style_tab[currentpara]
 		local newstyle = style_tab[newpara]

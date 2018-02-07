@@ -18,10 +18,6 @@ local function run_export_format_test(filetype, exporter, comparison_filename, s
 	comparison_content = get_file_content(comparison_filename)
 
 	AssertEquals(comparison_content, exported_content)
-
-	if supportsimport then
-		AssertEquals(filetype, document.filetype)
-	end
 end
 
 run_export_format_test(FileFormats.WORDGRINDER, Cmd.ExportWGFile, "testdocs/test.wgd", true)

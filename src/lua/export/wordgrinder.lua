@@ -18,7 +18,6 @@ local function exportwordgrinder(write, document)
 
 	write(".")
 	write("\n")
-	document.filetype = FileFormats.WORDGRINDER
 end 
 
 

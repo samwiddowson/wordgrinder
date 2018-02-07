@@ -346,7 +346,6 @@ local function export_odt_with_ui(filename, title, extension, document)
 		r, e = os.remove(filename..".old")
 	end
 
-	document.filetype = FileFormats.OPENDOCUMENT
 	QueueRedraw()
 	return true
 end
