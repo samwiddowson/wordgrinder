@@ -1,9 +1,9 @@
 require("tests/testsuite")
 
-local function run_import_format_test(importer, filename, fileformat)
+local function run_import_format_test(fileformat, filename)
 
 	local function test_document_content(document)
-		AssertEquals(fileformat, document.ioFormat)
+		AssertEquals(fileformat.name, document.ioFileFormat)
 		--get first paragraph
 		local para = document[1]
 
@@ -13,6 +13,8 @@ local function run_import_format_test(importer, filename, fileformat)
 		--assert it says "This is a test."
 		AssertEquals("This is a test.", para:asString())
 	end
+
+	local importer = fileformat.importer
 
 	-----------------------------
 	--Test with pre-created document
@@ -32,7 +34,9 @@ local function run_import_format_test(importer, filename, fileformat)
 	test_document_content(doc)
 end
 
-run_import_format_test(Cmd.ImportTextFile, "testdocs/test.txt", FileFormats.TEXT)
-run_import_format_test(Cmd.ImportHTMLFile, "testdocs/test.html", FileFormats.HTML)
-run_import_format_test(Cmd.ImportODTFile, "testdocs/test.odt", FileFormats.ODT)
-run_import_format_test(Cmd.ImportWGFile, "testdocs/test.wgd", FileFormats.WORDGRINDER)
+local fileformats = GetIoFileFormats()
+
+run_import_format_test(fileformats.Text, "testdocs/test.txt")
+run_import_format_test(fileformats.HTML, "testdocs/test.html")
+run_import_format_test(fileformats.OpenDocument, "testdocs/test.odt")
+run_import_format_test(fileformats.WordGrinder, "testdocs/test.wgd")

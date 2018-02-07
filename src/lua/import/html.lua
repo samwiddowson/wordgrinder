@@ -145,7 +145,7 @@ local function loadhtmlfile(fp, document)
 	end
 	flush()
 	
-	document.ioFormat = FileFormats.HTML
+	document.ioFileFormat = GetIoFileFormats().HTML.name
 	return true
 end
 

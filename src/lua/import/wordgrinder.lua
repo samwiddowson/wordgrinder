@@ -20,10 +20,10 @@ function loadwordgrinderfile(fp, document)
 		document:appendParagraph(para)
 	end
 
-	document.ioFormat = FileFormats.WORDGRINDER
+	document.ioFileFormat = GetIoFileFormats().WordGrinder.name
 	return true
 end
 
 function Cmd.ImportWGFile(filename, document)
-	return ImportFileWithUI(filename, "Import Wordgrinder File", loadwordgrinderfile, document)
+	return ImportFileWithUI(filename, "Import WordGrinder File", loadwordgrinderfile, document)
 end

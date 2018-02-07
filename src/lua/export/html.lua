@@ -145,6 +145,20 @@ local function callback(writer, document)
 
 end
 
+
+function Cmd.SaveHTMLFile(filename, document)
+	--this will later call SaveDocumentSet to save session info when doc is saved
+	if not document then
+		document = Document
+	end
+	document.ioFileFormat = GetIoFileFormats().HTML.name
+	Cmd.ExportHTMLFile(filename, document)
+end
+
+function Cmd.SaveHTMLFileAs(filename, document)
+	Cmd.SaveHTMLFile(nil, document)
+end
+
 function Cmd.ExportHTMLFile(filename, document)
 	return ExportFileWithUI(filename, "Export HTML File", ".html",
 		callback, document)

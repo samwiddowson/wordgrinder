@@ -26,7 +26,7 @@ local function loadtextfile(fp, document)
 		document:appendParagraph(p)
 	end
 	
-	document.ioFormat = FileFormats.TEXT
+	document.ioFileFormat = GetIoFileFormats().Text.name
 	return true
 end
 

@@ -350,6 +350,20 @@ local function export_odt_with_ui(filename, title, extension, document)
 	return true
 end
 
+
+function Cmd.SaveODTFile(filename, document)
+	--this will later call SaveDocumentSet to save session info when doc is saved
+	if not document then
+		document = Document
+	end
+	document.ioFileFormat = GetIoFileFormats().OpenDocument.name
+	Cmd.ExportODTFile(filename, document)
+end
+
+function Cmd.SaveODTFileAs(filename, document)
+	Cmd.SaveODTFile(nil, document)
+end
+
 function Cmd.ExportODTFile(filename, document)
 	return export_odt_with_ui(filename, "Export ODT File", ".odt", document)
 end

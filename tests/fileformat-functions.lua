@@ -1,6 +1,6 @@
 require("tests/testsuite")
 
-
+--[[
 globalSettings = {}
 GetDefaultIoFormat()
 
@@ -18,3 +18,4 @@ AssertClass( Cmd.ExportODTFile, GetExportFunction(FileFormats.ODT) )
 AssertClass( Cmd.ExportTextFile, GetExportFunction(FileFormats.TEXT) )
 AssertClass( Cmd.ExportTroffFile, GetExportFunction(FileFormats.TROFF) )
 AssertClass( Cmd.ExportWGFile, GetExportFunction(FileFormats.WORDGRINDER) )
+]]

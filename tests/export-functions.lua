@@ -1,13 +1,16 @@
 require("tests/testsuite")
 
-local function run_export_format_test(filetype, exporter, comparison_filename, supportsimport)
+local function run_export_format_test(fileformat, comparison_filename)
 	local function get_file_content(filename)
 		local file = io.open(filename)
 		content = file:read("*a")
 		io.close(file)
 		return content
 	end
+
+	local exporter = fileformat.exporter
 	local export_filename = os.tmpname()
+
 	document = CreateDocument()
 	document.name = "main"
 	document[1] = CreateParagraph("P", "This is a test.")
@@ -20,10 +23,12 @@ local function run_export_format_test(filetype, exporter, comparison_filename, s
 	AssertEquals(comparison_content, exported_content)
 end
 
-run_export_format_test(FileFormats.WORDGRINDER, Cmd.ExportWGFile, "testdocs/test.wgd", true)
-run_export_format_test(FileFormats.TEXT, Cmd.ExportTextFile, "testdocs/test.txt", true)
-run_export_format_test(FileFormats.HTML, Cmd.ExportHTMLFile, "testdocs/test.html", true)
-run_export_format_test(FileFormats.OPENDOCUMENT, Cmd.ExportODTFile, "testdocs/test.odt", true)
-run_export_format_test(FileFormats.MARKDOWN, Cmd.ExportMarkdownFile, "testdocs/test.md")
-run_export_format_test(FileFormats.TROFF, Cmd.ExportTroffFile, "testdocs/test.tr")
-run_export_format_test(FileFormats.LATEX, Cmd.ExportLatexFile, "testdocs/test.tex")
+local fileformats = GetIoFileFormats()
+
+run_export_format_test(fileformats.WordGrinder, "testdocs/test.wgd")
+run_export_format_test(fileformats.Text, "testdocs/test.txt")
+run_export_format_test(fileformats.HTML, "testdocs/test.html")
+run_export_format_test(fileformats.OpenDocument, "testdocs/test.odt")
+run_export_format_test(fileformats.Markdown, "testdocs/test.md")
+run_export_format_test(fileformats.troff, "testdocs/test.tr")
+run_export_format_test(fileformats.LaTex, "testdocs/test.tex")

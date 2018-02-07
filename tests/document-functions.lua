@@ -13,7 +13,7 @@ local testdoc1 = CreateDocument()
 testdoc1:appendParagraph("P", "This is a test.")
 
 --default to global default filetype
-AssertEquals(GetDefaultIoFormat(), testdoc1.filetype)
+AssertEquals(GetIoFileFormats().default.name, testdoc1.ioFileFormat)
 
 DocumentSet = CreateDocumentSet()
 DocumentSet.menu = CreateMenu()
