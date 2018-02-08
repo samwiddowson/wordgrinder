@@ -1,0 +1,282 @@
+WordGrinder dumpfile v4: this is a text file; diff me!
+.addons.autosave.enabled: false
+.addons.autosave.pattern: "%F.autosave.%T.wg"
+.addons.autosave.period: 10
+.addons.htmlexport.bold_off: "</b>"
+.addons.htmlexport.bold_on: "<b>"
+.addons.htmlexport.italic_off: "</i>"
+.addons.htmlexport.italic_on: "<i>"
+.addons.htmlexport.underline_off: "</u>"
+.addons.htmlexport.underline_on: "<u>"
+.addons.pagecount.enabled: false
+.addons.pagecount.wordsperpage: 250
+.addons.scrapbook.document: "Scrapbook"
+.addons.scrapbook.pattern: "Item from '%N' at %T:"
+.addons.scrapbook.timestamp: true
+.addons.smartquotes.doublequotes: false
+.addons.smartquotes.leftdouble: "“"
+.addons.smartquotes.leftsingle: "‘"
+.addons.smartquotes.notinraw: true
+.addons.smartquotes.rightdouble: "”"
+.addons.smartquotes.rightsingle: "’"
+.addons.smartquotes.singlequotes: false
+.addons.spellchecker.enabled: false
+.addons.spellchecker.usesystemdictionary: true
+.addons.spellchecker.useuserdictionary: true
+.clipboard.co: 1
+.clipboard.cp: 1
+.clipboard.cw: 1
+.clipboard.margin: 0
+.clipboard.viewmode: 1
+.documents.1.co: 6
+.documents.1.cp: 1
+.documents.1.cw: 4
+.documents.1.margin: 0
+.documents.1.name: "test.wgd"
+.documents.1.sticky_selection: true
+.documents.1.viewmode: 1
+.documents.1.wordcount: 4
+.documents.2.co: 6
+.documents.2.cp: 1
+.documents.2.cw: 4
+.documents.2.margin: 0
+.documents.2.name: "test.html"
+.documents.2.viewmode: 1
+.documents.2.wordcount: 4
+.documents.3.co: 6
+.documents.3.cp: 1
+.documents.3.cw: 4
+.documents.3.margin: 0
+.documents.3.name: "test.txt"
+.documents.3.viewmode: 1
+.documents.3.wordcount: 4
+.documents.4.co: 6
+.documents.4.cp: 1
+.documents.4.cw: 4
+.documents.4.margin: 0
+.documents.4.name: "test.odt"
+.documents.4.viewmode: 1
+.documents.4.wordcount: 4
+.fileformat: 7
+.idletime: 3
+.menu.accelerators.BACKSPACE: "ZDPC"
+.menu.accelerators.DELETE: "ZDNC"
+.menu.accelerators.DOWN: "ZD"
+.menu.accelerators.EC: "^C"
+.menu.accelerators.ECadd: "^M"
+.menu.accelerators.ECfind: "^L"
+.menu.accelerators.EF: "^F"
+.menu.accelerators.EG: "^G"
+.menu.accelerators.EN: "^K"
+.menu.accelerators.END: "ZE"
+.menu.accelerators.EP: "^V"
+.menu.accelerators.ER: "^R"
+.menu.accelerators.ET: "^X"
+.menu.accelerators.Eredo: "^Y"
+.menu.accelerators.Eundo: "^Z"
+.menu.accelerators.FQ: "^Q"
+.menu.accelerators.FS: "^S"
+.menu.accelerators.HOME: "ZH"
+.menu.accelerators.LEFT: "ZL"
+.menu.accelerators.PGDN: "ZPGDN"
+.menu.accelerators.PGUP: "ZPGUP"
+.menu.accelerators.RIGHT: "ZR"
+.menu.accelerators.SB: "^B"
+.menu.accelerators.SDOWN: "ZSD"
+.menu.accelerators.SEND: "ZSE"
+.menu.accelerators.SHOME: "ZSH"
+.menu.accelerators.SI: "^I"
+.menu.accelerators.SLEFT: "ZSL"
+.menu.accelerators.SO: "^O"
+.menu.accelerators.SP: "^P"
+.menu.accelerators.SPGDN: "ZSPGDN"
+.menu.accelerators.SPGUP: "ZSPGUP"
+.menu.accelerators.SRIGHT: "ZSR"
+.menu.accelerators.SU: "^U"
+.menu.accelerators.SUP: "ZSU"
+.menu.accelerators.S^DOWN: "ZSNP"
+.menu.accelerators.S^LEFT: "ZSWL"
+.menu.accelerators.S^PGDN: "ZSED"
+.menu.accelerators.S^PGUP: "ZSBD"
+.menu.accelerators.S^RIGHT: "ZSWR"
+.menu.accelerators.S^UP: "ZSPP"
+.menu.accelerators.UP: "ZU"
+.menu.accelerators.ZBD: "^PGUP"
+.menu.accelerators.ZD: "DOWN"
+.menu.accelerators.ZDNC: "DELETE"
+.menu.accelerators.ZDPC: "BACKSPACE"
+.menu.accelerators.ZDW: "^E"
+.menu.accelerators.ZE: "END"
+.menu.accelerators.ZED: "^PGDN"
+.menu.accelerators.ZH: "HOME"
+.menu.accelerators.ZL: "LEFT"
+.menu.accelerators.ZM: "^@"
+.menu.accelerators.ZNP: "^DOWN"
+.menu.accelerators.ZPGDN: "PGDN"
+.menu.accelerators.ZPGUP: "PGUP"
+.menu.accelerators.ZPP: "^UP"
+.menu.accelerators.ZR: "RIGHT"
+.menu.accelerators.ZSBD: "S^PGUP"
+.menu.accelerators.ZSD: "SDOWN"
+.menu.accelerators.ZSE: "SEND"
+.menu.accelerators.ZSED: "S^PGDN"
+.menu.accelerators.ZSH: "SHOME"
+.menu.accelerators.ZSL: "SLEFT"
+.menu.accelerators.ZSNP: "S^DOWN"
+.menu.accelerators.ZSPGDN: "SPGDN"
+.menu.accelerators.ZSPGUP: "SPGUP"
+.menu.accelerators.ZSPP: "S^UP"
+.menu.accelerators.ZSR: "SRIGHT"
+.menu.accelerators.ZSU: "SUP"
+.menu.accelerators.ZSW: "^W"
+.menu.accelerators.ZSWL: "S^LEFT"
+.menu.accelerators.ZSWR: "S^RIGHT"
+.menu.accelerators.ZU: "UP"
+.menu.accelerators.ZWL: "^LEFT"
+.menu.accelerators.ZWR: "^RIGHT"
+.menu.accelerators.^@: "ZM"
+.menu.accelerators.^B: "SB"
+.menu.accelerators.^C: "EC"
+.menu.accelerators.^DOWN: "ZNP"
+.menu.accelerators.^E: "ZDW"
+.menu.accelerators.^F: "EF"
+.menu.accelerators.^G: "EG"
+.menu.accelerators.^I: "SI"
+.menu.accelerators.^K: "EN"
+.menu.accelerators.^L: "ECfind"
+.menu.accelerators.^LEFT: "ZWL"
+.menu.accelerators.^M: "ECadd"
+.menu.accelerators.^O: "SO"
+.menu.accelerators.^P: "SP"
+.menu.accelerators.^PGDN: "ZED"
+.menu.accelerators.^PGUP: "ZBD"
+.menu.accelerators.^Q: "FQ"
+.menu.accelerators.^R: "ER"
+.menu.accelerators.^RIGHT: "ZWR"
+.menu.accelerators.^S: "FS"
+.menu.accelerators.^U: "SU"
+.menu.accelerators.^UP: "ZPP"
+.menu.accelerators.^V: "EP"
+.menu.accelerators.^W: "ZSW"
+.menu.accelerators.^X: "ET"
+.menu.accelerators.^Y: "Eredo"
+.menu.accelerators.^Z: "Eundo"
+.name: "/home/sam/sources/wordgrinder/testdocs/File-v8-test.wg"
+.statusbar: true
+.styles.1.above: 0
+.styles.1.below: 0
+.styles.1.desc: "Plain text"
+.styles.1.firstindent: 4
+.styles.1.name: "P"
+.styles.2.above: 3
+.styles.2.below: 1
+.styles.2.desc: "Heading #1"
+.styles.2.name: "H1"
+.styles.3.above: 2
+.styles.3.below: 1
+.styles.3.desc: "Heading #2"
+.styles.3.name: "H2"
+.styles.4.above: 1
+.styles.4.below: 1
+.styles.4.desc: "Heading #3"
+.styles.4.name: "H3"
+.styles.5.above: 1
+.styles.5.below: 1
+.styles.5.desc: "Heading #4"
+.styles.5.name: "H4"
+.styles.6.above: 1
+.styles.6.below: 1
+.styles.6.desc: "Indented text"
+.styles.6.indent: 4
+.styles.6.name: "Q"
+.styles.7.above: 1
+.styles.7.below: 1
+.styles.7.bullet: "-"
+.styles.7.desc: "List item with bullet"
+.styles.7.indent: 4
+.styles.7.name: "LB"
+.styles.8.above: 1
+.styles.8.below: 1
+.styles.8.desc: "List item without bullet"
+.styles.8.indent: 4
+.styles.8.name: "L"
+.styles.9.above: 0
+.styles.9.below: 0
+.styles.9.desc: "Indented text, run together"
+.styles.9.indent: 4
+.styles.9.name: "V"
+.styles.10.above: 0
+.styles.10.below: 0
+.styles.10.desc: "Preformatted text"
+.styles.10.indent: 4
+.styles.10.name: "PRE"
+.styles.11.above: 0
+.styles.11.below: 0
+.styles.11.desc: "Raw data exported to output file"
+.styles.11.indent: 0
+.styles.11.name: "RAW"
+.styles.H1.above: 3
+.styles.H1.below: 1
+.styles.H1.desc: "Heading #1"
+.styles.H1.name: "H1"
+.styles.H2.above: 2
+.styles.H2.below: 1
+.styles.H2.desc: "Heading #2"
+.styles.H2.name: "H2"
+.styles.H3.above: 1
+.styles.H3.below: 1
+.styles.H3.desc: "Heading #3"
+.styles.H3.name: "H3"
+.styles.H4.above: 1
+.styles.H4.below: 1
+.styles.H4.desc: "Heading #4"
+.styles.H4.name: "H4"
+.styles.L.above: 1
+.styles.L.below: 1
+.styles.L.desc: "List item without bullet"
+.styles.L.indent: 4
+.styles.L.name: "L"
+.styles.LB.above: 1
+.styles.LB.below: 1
+.styles.LB.bullet: "-"
+.styles.LB.desc: "List item with bullet"
+.styles.LB.indent: 4
+.styles.LB.name: "LB"
+.styles.P.above: 0
+.styles.P.below: 0
+.styles.P.desc: "Plain text"
+.styles.P.firstindent: 4
+.styles.P.name: "P"
+.styles.PRE.above: 0
+.styles.PRE.below: 0
+.styles.PRE.desc: "Preformatted text"
+.styles.PRE.indent: 4
+.styles.PRE.name: "PRE"
+.styles.Q.above: 1
+.styles.Q.below: 1
+.styles.Q.desc: "Indented text"
+.styles.Q.indent: 4
+.styles.Q.name: "Q"
+.styles.RAW.above: 0
+.styles.RAW.below: 0
+.styles.RAW.desc: "Raw data exported to output file"
+.styles.RAW.indent: 0
+.styles.RAW.name: "RAW"
+.styles.V.above: 0
+.styles.V.below: 0
+.styles.V.desc: "Indented text, run together"
+.styles.V.indent: 4
+.styles.V.name: "V"
+.current: 1
+#1
+WordGrinder
+testdocs/test.wgd
+#2
+HTML
+testdocs/test.html
+#3
+Text
+testdocs/test.txt
+#4
+OpenDocument
+testdocs/test.odt

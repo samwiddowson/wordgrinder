@@ -20,6 +20,7 @@ local unpack = rawget(_G, "unpack") or table.unpack
 local MAGIC = "WordGrinder dumpfile v1: this is not a text file!"
 local ZMAGIC = "WordGrinder dumpfile v2: this is not a text file!"
 local TMAGIC = "WordGrinder dumpfile v3: this is a text file; diff me!"
+local SMAGIC = "WordGrinder dumpfile v4: this is a text file; diff me!"
 
 local STOP = 0
 local TABLE = 1
@@ -553,6 +554,91 @@ function loadfromstreamt(fp)
 	return data
 end
 
+--Rather than refactor the code to load the previous file version,
+--  that code has been left untouched and largely copied to load the
+--  split file version, in order to reduce risk to backwards compatibility
+function loadfromstreams(fp)
+	local data = CreateDocumentSet()
+	data.menu = CreateMenu()
+	data.documents = {}
+
+	while true do
+		local line = fp:read("*l")
+		if not line then
+			break
+		end
+
+		if line:find("^%.") then
+			local _, _, k, p, v = line:find("^(.*)%.([^.:]+): (.*)$")
+
+			-- This is setting a property value.
+			local o = data
+			for e in k:gmatch("[^.]+") do
+				if e:find('^[0-9]+') then
+					e = tonumber(e)
+				end
+				if not o[e] then
+					if (o == data.documents) then
+						o[e] = CreateDocument()
+					else
+						o[e] = {}
+					end
+				end
+				o = o[e]
+			end
+
+			if v:find('^-?[0-9][0-9.e+-]*$') then
+				v = tonumber(v)
+			elseif (v == "true") then
+				v = true
+			elseif (v == "false") then
+				v = false
+			elseif v:find('^".*"$') then
+				v = v:sub(2, -2)
+				v = unescape(v)
+			else
+				error(
+					string.format("malformed property %s.%s: %s", k, p, v))
+			end
+
+			if p:find('^[0-9]+$') then
+				p = tonumber(p)
+			end
+
+			o[p] = v
+		elseif line:find("^#") then
+			local id = tonumber(line:sub(2))
+			local doc = data.documents[id]
+
+			local fileformat = fp:read("*l")
+			if not fileformat then
+				error ( string.format("no file format specified for document %s", id))
+			end
+			local importer = GetIoFileFormats()[fileformat].importer
+			if not importer then
+				error ( string.format("import not supported for file format: %s", fileformat))
+			end
+
+			local filename = fp:read("*l")
+			local importsuccess = importer(filename, doc)
+
+			if not importsuccess then
+				error ( string.format("something went wrong trying to load the file: %s", filename))
+			end
+		else
+			error(
+				string.format("malformed line when reading file: %s", line))
+		end
+	end
+
+	-- Patch up document names.
+	for i, d in ipairs(data.documents) do
+		data.documents[d.name] = d
+	end
+	data.current = data.documents[data.current]
+
+	return data
+end
 function LoadFromStream(filename)
 	local fp, e = io.open(filename, "rb")
 	if not fp then
@@ -566,6 +652,8 @@ function LoadFromStream(filename)
 		loader = loadfromstreamz
 	elseif (magic == TMAGIC) then
 		loader = loadfromstreamt
+	elseif (magic == SMAGIC) then
+		loader = loadfromstreams
 	else
 		fp:close()
 		return nil, ("'"..filename.."' is not a valid WordGrinder file.")
