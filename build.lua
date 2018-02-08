@@ -336,7 +336,6 @@ function run_wordgrinder_tests(exe, luapackage, frontend, buildstyle)
 	"tests/import-functions.lua",
 	"tests/export-functions.lua",
 	"tests/document-functions.lua",
-	"tests/fileformat-functions.lua",
 	"tests/filewriter.lua",
     }) do
         local stampfile = OBJDIR.."/"..name.."/"..test..".stamp"
