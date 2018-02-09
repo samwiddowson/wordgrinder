@@ -297,6 +297,7 @@ DocumentClass =
 
 	touch = function(self)
 		self.changed = true
+		self.virgin = false
 		FireEvent(Event.DocumentModified, self)
 	end,
 

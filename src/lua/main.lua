@@ -52,6 +52,7 @@ function ResetDocumentSet()
 	DocumentSet.menu = CreateMenu()
 	Document = CreateDocument()
 	DocumentSet:addDocument(CreateDocument(), "main")
+	DocumentSet.documents["main"].virgin = true
 	RebuildParagraphStylesMenu(DocumentStyles)
 	RebuildDocumentsMenu(DocumentSet.documents)
 	DocumentSet:purge()

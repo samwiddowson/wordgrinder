@@ -152,6 +152,11 @@ function ImportFileWithUI(filename, title, callback, document)
 
 	document.filename = filename
 
+	--replace the default document if it was the only one, and it hasn't been touched
+	if (#DocumentSet.documents == 2) and (DocumentSet.documents[1].virgin) then
+		DocumentSet:deleteDocument(DocumentSet.documents[1].name)
+	end
+
 	QueueRedraw()
 	return true
 end
