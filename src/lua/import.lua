@@ -96,6 +96,14 @@ function ImportFileWithUI(filename, title, callback, document)
 		end
 	end
 
+	local alreadyopendocument = DocumentSet:findDocumentByFilename(filename)
+	if alreadyopendocument then
+		DocumentSet:setCurrent(alreadyopendocument.name)
+		ModalMessage(nil, "This file is already open!")
+		QueueRedraw()
+		return false
+	end
+
 	ImmediateMessage("Importing "..filename.."...")
 
 	local fp = io.open(filename)
@@ -141,6 +149,8 @@ function ImportFileWithUI(filename, title, callback, document)
 	if (#document > 1) then
 		document:deleteParagraphAt(1)
 	end
+
+	document.filename = filename
 
 	QueueRedraw()
 	return true

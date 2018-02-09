@@ -199,6 +199,14 @@ function Cmd.ImportODTFile(filename, document)
 		end
 	end
 	
+	local alreadyopendocument = DocumentSet:findDocumentByFilename(filename)
+	if alreadyopendocument then
+		DocumentSet:setCurrent(alreadyopendocument.name)
+		ModalMessage(nil, "This file is already open!")
+		QueueRedraw()
+		return false
+	end
+
 	ImmediateMessage("Importing "..filename.."...")	
 
 	-- Load the styles and content subdocuments.
@@ -266,6 +274,8 @@ function Cmd.ImportODTFile(filename, document)
 	if (#document > 1) then
 		document:deleteParagraphAt(1)
 	end
+
+	document.filename = filename
 
 	QueueRedraw()
 	return true
