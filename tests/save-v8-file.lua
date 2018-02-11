@@ -54,78 +54,22 @@ local function test_not_saved(document, testvalues)
 	AssertEquals("", testfilecontent)
 end
 
+function test_reloaded_content(testvalues)
+	local doc = DocumentSet.documents[testvalues.docname]
+	AssertNotNull(doc)
+	AssertEquals(testvalues.testfile, doc.filename)
+	AssertEquals(testvalues.ioFileFormat, doc.ioFileFormat)
+
+end
 function test_docset_file_content(filename)
+
 	local docsetfile = io.open(filename)
 
 	local line = docsetfile:read("*l")
 	AssertEquals("WordGrinder dumpfile v4: this is a text file; diff me!", line)
 
-	local firstdocumentlinefound
-	while line do
-		line = docsetfile:read("*l")
-		if line == "#1" then
-			firstdocumentlinefound = true
-			break
-		elseif not line then
-			break
-		end
-	end
-
-	AssertEquals(true, firstdocumentlinefound)
-
-	line = docsetfile:read("*l")
-	AssertEquals("HTML", line)
-
-	line = docsetfile:read("*l")
-	AssertEquals(htmlvalues.testfile, line) 
-
-	line = docsetfile:read("*l")
-	AssertEquals(".", line)
-
-
-	line = docsetfile:read("*l")
-	AssertEquals("#2", line)
-
-	line = docsetfile:read("*l")
-	AssertEquals("OpenDocument", line)
-
-	line = docsetfile:read("*l")
-	AssertEquals(odtvalues.testfile, line) 
-
-	line = docsetfile:read("*l")
-	AssertEquals(".", line)
-
-
-	line = docsetfile:read("*l")
-	AssertEquals("#3", line)
-
-	line = docsetfile:read("*l")
-	AssertEquals("Text", line)
-
-	line = docsetfile:read("*l")
-	AssertEquals(txtvalues.testfile, line) 
-
-	line = docsetfile:read("*l")
-	AssertEquals(".", line)
-
-
-	line = docsetfile:read("*l")
-	AssertEquals("#4", line)
-
-	line = docsetfile:read("*l")
-	AssertEquals("WordGrinder", line)
-
-	line = docsetfile:read("*l")
-	AssertEquals(wgdvalues.testfile, line) 
-
-	line = docsetfile:read("*l")
-	AssertEquals(".", line)
-
-
-	line = docsetfile:read("*l")
-	AssertNull(line)
-
 	docsetfile:close()
+
 end
 
 
@@ -139,6 +83,7 @@ local txtdoc = create_test_document(txtvalues)
 local wgddoc = create_test_document(wgdvalues)
 
 htmldoc:touch()
+
 AssertEquals(true, htmldoc.changed)
 AssertNull(odtdoc.changed)
 AssertNull(txtdoc.changed)
@@ -148,10 +93,6 @@ test_not_saved(htmldoc, htmlvalues)
 test_not_saved(odtdoc, odtvalues)
 test_not_saved(txtdoc, txtvalues)
 test_not_saved(wgddoc, wgdvalues)
-
---AssertEquals(true, odtdoc.changed)
---AssertEquals(true, txtdoc.changed)
---AssertEquals(true, wgddoc.changed)
 
 Cmd.SaveCurrentDocumentAs(docsetfilename)
 
@@ -165,9 +106,47 @@ test_not_saved(odtdoc, odtvalues)
 test_not_saved(txtdoc, txtvalues)
 test_not_saved(wgddoc, wgdvalues)
 
---test_document_content(odtdoc, odtvalues)
---test_document_content(txtdoc, txtvalues)
---test_document_content(wgddoc, wgdvalues)
+test_docset_file_content(docsetfilename)
+
+
+
+DocumentSet = CreateDocumentSet()
+DocumentSet.menu = CreateMenu()
+DocumentSet.documents = {}
+
+htmldoc = create_test_document(htmlvalues)
+odtdoc = create_test_document(odtvalues)
+txtdoc = create_test_document(txtvalues)
+wgddoc = create_test_document(wgdvalues)
+
+htmldoc:touch()
+odtdoc:touch()
+txtdoc:touch()
+wgddoc:touch()
+
+AssertEquals(true, htmldoc.changed)
+AssertEquals(true, odtdoc.changed)
+AssertEquals(true, txtdoc.changed)
+AssertEquals(true, wgddoc.changed)
+
+Cmd.SaveCurrentDocumentAs(docsetfilename)
+
+AssertNull(htmldoc.changed)
+AssertNull(odtdoc.changed)
+AssertNull(txtdoc.changed)
+AssertNull(wgddoc.changed)
+
+test_document_content(htmldoc, htmlvalues)
+test_document_content(odtdoc, odtvalues)
+test_document_content(txtdoc, txtvalues)
+test_document_content(wgddoc, wgdvalues)
 
 test_docset_file_content(docsetfilename)
 
+ResetDocumentSet()
+Cmd.LoadDocumentSet(docsetfilename)
+
+test_reloaded_content(htmlvalues)
+test_reloaded_content(odtvalues)
+test_reloaded_content(txtvalues)
+test_reloaded_content(wgdvalues)

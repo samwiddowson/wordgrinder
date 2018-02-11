@@ -33,6 +33,8 @@ WordGrinder dumpfile v4: this is a text file; diff me!
 .documents.1.cw: 4
 .documents.1.margin: 0
 .documents.1.name: "test.wgd"
+.documents.1.filename: "testdocs/test.wgd"
+.documents.1.ioFileFormat: "WordGrinder"
 .documents.1.sticky_selection: true
 .documents.1.viewmode: 1
 .documents.1.wordcount: 4
@@ -41,6 +43,8 @@ WordGrinder dumpfile v4: this is a text file; diff me!
 .documents.2.cw: 4
 .documents.2.margin: 0
 .documents.2.name: "test.html"
+.documents.2.filename: "testdocs/test.html"
+.documents.2.ioFileFormat: "HTML"
 .documents.2.viewmode: 1
 .documents.2.wordcount: 4
 .documents.3.co: 6
@@ -48,6 +52,8 @@ WordGrinder dumpfile v4: this is a text file; diff me!
 .documents.3.cw: 4
 .documents.3.margin: 0
 .documents.3.name: "test.txt"
+.documents.3.filename: "testdocs/test.txt"
+.documents.3.ioFileFormat: "Text"
 .documents.3.viewmode: 1
 .documents.3.wordcount: 4
 .documents.4.co: 6
@@ -55,6 +61,8 @@ WordGrinder dumpfile v4: this is a text file; diff me!
 .documents.4.cw: 4
 .documents.4.margin: 0
 .documents.4.name: "test.odt"
+.documents.4.filename: "testdocs/test.odt"
+.documents.4.ioFileFormat: "OpenDocument"
 .documents.4.viewmode: 1
 .documents.4.wordcount: 4
 .fileformat: 7
@@ -268,15 +276,3 @@ WordGrinder dumpfile v4: this is a text file; diff me!
 .styles.V.indent: 4
 .styles.V.name: "V"
 .current: 1
-#1
-WordGrinder
-testdocs/test.wgd
-#2
-HTML
-testdocs/test.html
-#3
-Text
-testdocs/test.txt
-#4
-OpenDocument
-testdocs/test.odt

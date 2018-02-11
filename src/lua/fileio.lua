@@ -76,35 +76,23 @@ local function writetostream(object, write, writeo)
 		end
 	end
 
-	save("", object)
-
+	--export documents first, because exporting might set a new filename
 	if (GetClass(object) == DocumentSetClass) then
 		save(".current", object:_findDocument(object.current.name))
 
 		local fileformats = GetIoFileFormats()
 
-		for i, d in ipairs(object.documents) do
-			write("#")
-			write(tostring(i))
-			write("\n")
-
+		for i, d in ipairs(object:getChangedDocumentList()) do
 			local ff = d.ioFileFormat
-
-			write(ff)
-			write("\n")
 
 			exporter = fileformats[ff].exporter
 
-			if d.changed then
-				exporter(d.filename, d)
-				d:clean()
-			end
-
-			write(d.filename)
-			write("\n")
-			write(".\n")
+			exporter(d.filename, d)
+			d:clean()
 		end
 	end
+
+	save("", object)
 
 	return true
 end
@@ -558,91 +546,68 @@ function loadfromstreamt(fp)
 	return data
 end
 
---Rather than refactor the code to load the previous file version,
---  that code has been left untouched and largely copied to load the
---  split file version, in order to reduce risk to backwards compatibility
 function loadfromstreams(fp)
-	local data = CreateDocumentSet()
-	data.menu = CreateMenu()
-	data.documents = {}
+	--since we're not actually listing document info at the end of the document set file at all any more,
+        -- we should be able to safely call the previous "TMAGIC" loader for the document set information
+        -- and document metadata
+	local data = loadfromstreamt(fp)
 
-	while true do
-		local line = fp:read("*l")
-		if not line then
-			break
-		end
+	if (#data.documents > 0) then
+		local fileformats = GetIoFileFormats()
 
-		if line:find("^%.") then
-			local _, _, k, p, v = line:find("^(.*)%.([^.:]+): (.*)$")
-
-			-- This is setting a property value.
-			local o = data
-			for e in k:gmatch("[^.]+") do
-				if e:find('^[0-9]+') then
-					e = tonumber(e)
-				end
-				if not o[e] then
-					if (o == data.documents) then
-						o[e] = CreateDocument()
-					else
-						o[e] = {}
-					end
-				end
-				o = o[e]
+		local function importdocument(doc)
+			--If the document couldn't be imported, warn the user with details and delete it from the documentset
+			local err
+			if not doc.ioFileFormat then
+				err = "No file format specified for document "..doc.name
+				return err
 			end
 
-			if v:find('^-?[0-9][0-9.e+-]*$') then
-				v = tonumber(v)
-			elseif (v == "true") then
-				v = true
-			elseif (v == "false") then
-				v = false
-			elseif v:find('^".*"$') then
-				v = v:sub(2, -2)
-				v = unescape(v)
-			else
-				error(
-					string.format("malformed property %s.%s: %s", k, p, v))
-			end
-
-			if p:find('^[0-9]+$') then
-				p = tonumber(p)
-			end
-
-			o[p] = v
-		elseif line:find("^#") then
-			local id = tonumber(line:sub(2))
-			local doc = data.documents[id]
-
-			local fileformat = fp:read("*l")
-			if not fileformat then
-				error ( string.format("no file format specified for document %s", id))
-			end
-			local importer = GetIoFileFormats()[fileformat].importer
+			local importer = fileformats[doc.ioFileFormat].importer
 			if not importer then
-				error ( string.format("import not supported for file format: %s", fileformat))
+				err = "Import not supported for file format: "..doc.ioFileFormat
+				return err
 			end
 
-			local filename = fp:read("*l")
-			local importsuccess = importer(filename, doc)
+			if not doc.filename then
+				err = "No file path was specified for the document, "..doc.name..
+						".\nSomething must have gone wrong saving the session information."
+				return err
+			end
+
+			local importsuccess, err = importer(doc.filename, doc)
 
 			if not importsuccess then
-				error ( string.format("something went wrong trying to load the file: %s", filename))
+				--TODO: pass on err specified by importer
+				err = "Something went wrong trying to load the file: %s"..doc.filename
+				return err
 			end
-		else
-			error(
-				string.format("malformed line when reading file: %s", line))
-		end
-	end
 
-	-- Patch up document names.
-	for i, d in ipairs(data.documents) do
-		data.documents[d.name] = d
+			return nil
+		end
+
+		local firstdocumentname
+		--import the documents from the metadata we just loaded
+		for i, d in ipairs(data.documents) do
+			data.current = data.documents[data.current]
+			if not firstdocumentname then
+				firstdocumentname = d.name
+			end
+
+			local e = importdocument(d)
+
+			if e then
+				ModalMessage("Unable to import "..d.name, e)
+				QueueRedraw()
+				data:deleteDocument(d.name)
+			end
+		end
+		data:setCurrent(firstdocumentname)
 	end
-	data.current = data.documents[data.current]
 
 	return data
 end
+
 function LoadFromStream(filename)
 	local fp, e = io.open(filename, "rb")
 	if not fp then
@@ -687,6 +652,8 @@ function Cmd.LoadDocumentSet(filename)
 	if not ConfirmDocumentErasure() then
 		return false
 	end
+
+	ResetDocumentSet()
 
 	if not filename then
 		filename = FileBrowser("Load Document Set", "Load file:", false)
