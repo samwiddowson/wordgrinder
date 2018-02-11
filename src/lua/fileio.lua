@@ -95,7 +95,10 @@ local function writetostream(object, write, writeo)
 
 			exporter = fileformats[ff].exporter
 
-			exporter(d.filename, d)
+			if d.changed then
+				exporter(d.filename, d)
+				d:clean()
+			end
 
 			write(d.filename)
 			write("\n")
