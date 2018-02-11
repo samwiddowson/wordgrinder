@@ -81,24 +81,25 @@ local function writetostream(object, write, writeo)
 	if (GetClass(object) == DocumentSetClass) then
 		save(".current", object:_findDocument(object.current.name))
 
+		local fileformats = GetIoFileFormats()
+
 		for i, d in ipairs(object.documents) do
 			write("#")
 			write(tostring(i))
 			write("\n")
 
-			for _, p in ipairs(d) do
-				write(p.style)
+			local ff = d.ioFileFormat
 
-				for _, s in ipairs(p) do
-					write(" ")
-					write(s)
-				end
-
-				write("\n")
-			end
-
-			write(".")
+			write(ff)
 			write("\n")
+
+			exporter = fileformats[ff].exporter
+
+			exporter(d.filename, d)
+
+			write(d.filename)
+			write("\n")
+			write(".\n")
 		end
 	end
 
@@ -141,7 +142,7 @@ function SaveToStream(filename, object)
 
 	local e
 	if r then
-		r, e = fp:write(TMAGIC, "\n", s)
+		r, e = fp:write(SMAGIC, "\n", s)
 	end
 	if r then
 		r, e = fp:close()

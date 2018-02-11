@@ -48,7 +48,7 @@ local function callback(writer, document)
 			writer('\\sloppy\n')
 			writer('\\onehalfspacing\n')
 			writer('\\begin{document}\n')
-			writer('\\title{', untex(Document.name), '}\n')
+			writer('\\title{', untex(document.name), '}\n')
 			writer('\\author{(no author)}\n')
 			writer('\\maketitle\n')
 		end,

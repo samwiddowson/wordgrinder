@@ -12,23 +12,23 @@ local function run_export_format_test(fileformat, comparison_filename)
 	local export_filename = os.tmpname()
 
 	document = CreateDocument()
-	document.name = "main"
+	document.name = comparison_filename
 	document[1] = CreateParagraph("P", "This is a test.")
 
 	exporter(export_filename, document)
 
 	exported_content = get_file_content(export_filename) 
-	comparison_content = get_file_content(comparison_filename)
+	comparison_content = get_file_content("testdocs/"..comparison_filename)
 
 	AssertEquals(comparison_content, exported_content)
 end
 
 local fileformats = GetIoFileFormats()
 
-run_export_format_test(fileformats.WordGrinder, "testdocs/test.wgd")
-run_export_format_test(fileformats.Text, "testdocs/test.txt")
-run_export_format_test(fileformats.HTML, "testdocs/test.html")
-run_export_format_test(fileformats.OpenDocument, "testdocs/test.odt")
-run_export_format_test(fileformats.Markdown, "testdocs/test.md")
-run_export_format_test(fileformats.troff, "testdocs/test.tr")
-run_export_format_test(fileformats.LaTex, "testdocs/test.tex")
+run_export_format_test(fileformats.WordGrinder, "test.wgd")
+run_export_format_test(fileformats.Text, "test.txt")
+run_export_format_test(fileformats.HTML, "test.html")
+run_export_format_test(fileformats.OpenDocument, "test.odt")
+run_export_format_test(fileformats.Markdown, "test.md")
+run_export_format_test(fileformats.troff, "test.tr")
+run_export_format_test(fileformats.LaTex, "test.tex")

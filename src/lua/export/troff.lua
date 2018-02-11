@@ -106,7 +106,7 @@ local function callback(writer, document)
 				'WordGrinder '..VERSION..'.\n')
 			writer('.\\" Use the .ms macro package!\n')
 			writer('.TL\n')
-			emit_text(Document.name)
+			emit_text(document.name)
 			writer('\n')
 			linestart = true
 		end,
