@@ -48,9 +48,6 @@ local function test_document_content(document, testvalues)
 	AssertEquals(comparisonfilecontent, testfilecontent)
 end
 
-print("html test file:" .. htmlvalues.testfile)
-print("docset file:".. docsetfilename)
-
 DocumentSet = CreateDocumentSet()
 DocumentSet.menu = CreateMenu()
 DocumentSet.documents = {}
