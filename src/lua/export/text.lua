@@ -74,6 +74,7 @@ function Cmd.ExportTextFile(filename, document)
 		callback, document)
 	if success then
 		document.filename = filename
+		document.name = Leafname(filename)
 	end
 	return success
 end

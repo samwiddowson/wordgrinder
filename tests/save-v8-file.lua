@@ -55,12 +55,12 @@ local function test_not_saved(document, testvalues)
 end
 
 function test_reloaded_content(testvalues)
-	local doc = DocumentSet.documents[testvalues.docname]
+	local doc = DocumentSet.documents[Leafname(testvalues.testfile)]
 	AssertNotNull(doc)
 	AssertEquals(testvalues.testfile, doc.filename)
 	AssertEquals(testvalues.ioFileFormat, doc.ioFileFormat)
-
 end
+
 function test_docset_file_content(filename)
 
 	local docsetfile = io.open(filename)

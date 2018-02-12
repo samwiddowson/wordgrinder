@@ -368,6 +368,7 @@ function Cmd.ExportODTFile(filename, document)
 	local success = export_odt_with_ui(filename, "Export ODT File", ".odt", document)
 	if success then
 		document.filename = filename
+		document.name = Leafname(filename)
 	end
 	return success
 end

@@ -24,6 +24,7 @@ local function run_export_format_test(fileformat, comparison_filename)
 
 	if fileformat.importer then
 		AssertEquals(export_filename, document.filename)
+		AssertEquals(Leafname(export_filename), document.name)
 	end
 end
 
