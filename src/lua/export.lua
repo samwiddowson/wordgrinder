@@ -163,6 +163,13 @@ function ExportFileWithUI(filename, title, extension, callback, document)
 		end
 	end
 
+	local alreadyopendocument = DocumentSet:findDocumentByFilename(filename)
+	if alreadyopendocument and (alreadyopendocument~=document) then
+		ModalMessage(nil, "The file, '"..filename.."' refers to a currently-open document. Please close the document or choose another file.")
+		QueueRedraw()
+		return false
+	end
+
 	ImmediateMessage("Exporting...")
 
 	local filewriter = CreateFileWriter(filename)

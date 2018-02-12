@@ -72,7 +72,9 @@ end
 function Cmd.ExportTextFile(filename, document)
 	local success = ExportFileWithUI(filename, "Export Text File", ".txt",
 		callback, document)
-	document.filename = filename
+	if success then
+		document.filename = filename
+	end
 	return success
 end
 

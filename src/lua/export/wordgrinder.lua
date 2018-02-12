@@ -36,6 +36,8 @@ end
 
 function Cmd.ExportWGFile(filename, document)
 	local success = ExportFileWithUI(filename, "Export native WordGrider file", ".wgd", exportwordgrinder, document)
-	document.filename = filename
+	if success then
+		document.filename = filename
+	end
 	return success
 end

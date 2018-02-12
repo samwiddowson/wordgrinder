@@ -162,7 +162,9 @@ end
 function Cmd.ExportHTMLFile(filename, document)
 	local success = ExportFileWithUI(filename, "Export HTML File", ".html",
 		callback, document)
-	document.filename = filename
+	if success then
+		document.filename = filename
+	end
 	return success
 end
 
