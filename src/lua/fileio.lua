@@ -138,7 +138,7 @@ function SaveDocumentSetRaw(filename)
 	return SaveToStream(filename, DocumentSet)
 end
 
-function Cmd.SaveCurrentDocumentAs(filename)
+function Cmd.SaveDocumentSetAs(filename)
 	if not filename then
 		filename = FileBrowser("Save Document Set", "Save as:", true)
 		if not filename then
@@ -161,7 +161,7 @@ function Cmd.SaveCurrentDocumentAs(filename)
 	return r
 end
 
-function Cmd.SaveCurrentDocument()
+function Cmd.SaveDocumentSet()
 	local name = DocumentSet.name
 	if not name then
 		name = FileBrowser("Save Document Set", "Save as:", true)
@@ -174,7 +174,7 @@ function Cmd.SaveCurrentDocument()
 		DocumentSet.name = name
 	end
 
-	return Cmd.SaveCurrentDocumentAs(name)
+	return Cmd.SaveDocumentSetAs(name)
 end
 
 local function loadfromstream(fp)

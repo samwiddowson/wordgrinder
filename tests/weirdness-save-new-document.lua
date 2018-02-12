@@ -14,7 +14,7 @@ AssertClass(Document[1], ParagraphClass)
 
 local filename = os.tmpname()
 
-AssertEquals(Cmd.SaveCurrentDocumentAs(filename), true)
+AssertEquals(Cmd.SaveDocumentSetAs(filename), true)
 AssertEquals(Cmd.LoadDocumentSet(filename), true)
 
 Cmd.ChangeDocument("main")

@@ -56,17 +56,13 @@ local function callback(writer, document)
 	})
 end
 
-function Cmd.SaveTextFile(filename, document)
+function Cmd.SaveAsTextFile(filename, document)
 	--this will later call SaveDocumentSet to save session info when doc is saved
 	if not document then
 		document = Document
 	end
 	document.ioFileFormat = GetIoFileFormats().Text.name
 	Cmd.ExportTextFile(filename, document)
-end
-
-function Cmd.SaveTextFileAs(filename, document)
-	Cmd.SaveTextFile(nil, document)
 end
 
 function Cmd.ExportTextFile(filename, document)
