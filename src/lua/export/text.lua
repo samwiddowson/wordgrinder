@@ -70,8 +70,10 @@ function Cmd.SaveTextFileAs(filename, document)
 end
 
 function Cmd.ExportTextFile(filename, document)
-	return ExportFileWithUI(filename, "Export Text File", ".txt",
+	local success = ExportFileWithUI(filename, "Export Text File", ".txt",
 		callback, document)
+	document.filename = filename
+	return success
 end
 
 function Cmd.ExportToTextString()

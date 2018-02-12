@@ -160,8 +160,10 @@ function Cmd.SaveHTMLFileAs(filename, document)
 end
 
 function Cmd.ExportHTMLFile(filename, document)
-	return ExportFileWithUI(filename, "Export HTML File", ".html",
+	local success = ExportFileWithUI(filename, "Export HTML File", ".html",
 		callback, document)
+	document.filename = filename
+	return success
 end
 
 -----------------------------------------------------------------------------
