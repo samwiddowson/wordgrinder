@@ -100,61 +100,37 @@ end
 function SaveToStream(filename, object)
 	-- Ensure the destination file is writeable.
 
-	local fp, e = io.open(filename, "wb")
-	if not fp then
-		return nil, e
+	local filewriter = CreateFileWriter(filename)
+	local fp, e = io.open(filename, "w")
+	if filewriter.err then
+		return nil, filewriter.err
 	end
-	fp:close()
 
 	-- However, write the file to a *different* filename
 	-- (so that crashes during writing doesn't corrupt the file).
 
-	fp, e = io.open(filename..".new", "wb")
-	if not fp then
-		return nil, e
+	local opensuccess = filewriter:open()
+	if not opensuccess then
+		return nil, filewriter.err
 	end
 
-	local fpw = fp.write
-
-	local ss = {}
-	local write = function(s)
-		ss[#ss+1] = s
+	local write = function(...)
+		filewriter:writeToBuffer(table.concat({...}))
 	end
 
 	local writeo = function(k, v)
-		write(k)
-		write(": ")
-		write(v)
-		write("\n")
+		write(k, ": ", v, "\n")
 	end
+
+	write(SMAGIC,"\n")
 
 	local r = writetostream(object, write, writeo)
-	local s = table.concat(ss)
-
-	local e
-	if r then
-		r, e = fp:write(SMAGIC, "\n", s)
-	end
-	if r then
-		r, e = fp:close()
-	end
-
-	-- Once done, do a complicated series of renames so that we
-	-- don't remove the old file until we're sure the new one has
-	-- been written correctly. Note that accurs�d Windows doesn't
-	-- support clobbering renames...
 
 	if r then
-		r, e = os.rename(filename, filename..".old")
-		if not e then
-			r, e = os.rename(filename..".new", filename)
-		end
-		if not e then
-			os.remove(filename..".old")
-		end
+		filewriter:finalize()
 	end
 
-	return r, e
+	return r, filewriter.err
 end
 
 function SaveDocumentSetRaw(filename)
