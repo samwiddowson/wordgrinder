@@ -57,12 +57,14 @@ local function callback(writer, document)
 end
 
 function Cmd.SaveAsTextFile(filename, document)
-	--this will later call SaveDocumentSet to save session info when doc is saved
 	if not document then
 		document = Document
 	end
 	document.ioFileFormat = GetIoFileFormats().Text.name
-	Cmd.ExportTextFile(filename, document)
+	document.filename = filename
+	--document.name = Leafname(filename)
+	SaveDocument(document)
+	return Cmd.SaveDocumentSet()
 end
 
 function Cmd.ExportTextFile(filename, document)

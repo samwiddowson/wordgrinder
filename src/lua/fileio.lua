@@ -79,17 +79,6 @@ local function writetostream(object, write, writeo)
 	--export documents first, because exporting might set a new filename
 	if (GetClass(object) == DocumentSetClass) then
 		save(".current", object:_findDocument(object.current.name))
-
-		local fileformats = GetIoFileFormats()
-
-		for i, d in ipairs(object:getChangedDocumentList()) do
-			local ff = d.ioFileFormat
-
-			exporter = fileformats[ff].exporter
-
-			exporter(d.filename, d)
-			d:clean()
-		end
 	end
 
 	save("", object)
@@ -161,7 +150,11 @@ function Cmd.SaveDocumentSetAs(filename)
 	return r
 end
 
-function Cmd.SaveDocumentSet()
+function Cmd.SaveDocumentSet(documentsetfilename)
+	if documentsetfilename then
+		DocumentSet.name = documentsetfilename
+	end
+
 	local name = DocumentSet.name
 	if not name then
 		name = FileBrowser("Save Document Set", "Save as:", true)
@@ -175,6 +168,31 @@ function Cmd.SaveDocumentSet()
 	end
 
 	return Cmd.SaveDocumentSetAs(name)
+end
+
+function SaveDocument(document)
+	local fileformats = GetIoFileFormats()
+	local ff = document.ioFileFormat
+
+	local exporter = fileformats[ff].exporter
+
+	local success = exporter(document.filename, document)
+
+	document:clean()
+
+	return success
+end
+
+function Cmd.SaveCurrentDocument(documentsetfilename)
+	SaveDocument(Document)
+	return Cmd.SaveDocumentSet(documentsetfilename)
+end
+
+function Cmd.SaveAllDocuments(documentsetfilename)
+	for _, d in ipairs(DocumentSet:getChangedDocumentList()) do
+		SaveDocument(d)
+	end
+	return Cmd.SaveDocumentSet(documentsetfilename)
 end
 
 local function loadfromstream(fp)

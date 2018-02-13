@@ -16,7 +16,7 @@ local import_table =
 
 local export_table =
 {
-	["wg"] = Cmd.SaveDocumentSetAs,
+	["wg"] = Cmd.SaveAllDocuments,
 	["odt"] = Cmd.ExportODTFile,
 	["html"] = Cmd.ExportHTMLFile,
 	["tr"] = Cmd.ExportTroffFile,

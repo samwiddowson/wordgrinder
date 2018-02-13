@@ -147,12 +147,14 @@ end
 
 
 function Cmd.SaveAsHTMLFile(filename, document)
-	--this will later call SaveDocumentSet to save session info when doc is saved
 	if not document then
 		document = Document
 	end
 	document.ioFileFormat = GetIoFileFormats().HTML.name
-	Cmd.ExportHTMLFile(filename, document)
+	document.filename = filename
+	--document.name = Leafname(filename)
+	SaveDocument(document)
+	return Cmd.SaveDocumentSet()
 end
 
 function Cmd.ExportHTMLFile(filename, document)

@@ -340,6 +340,7 @@ function run_wordgrinder_tests(exe, luapackage, frontend, buildstyle)
 	"tests/load-0.7-v7.lua",
 	"tests/load-0.8.lua",
 	"tests/save-v8-file.lua",
+	"tests/save-document-as-fileformat.lua",
     }) do
         local stampfile = OBJDIR.."/"..name.."/"..test..".stamp"
         alltests[#alltests+1] = stampfile

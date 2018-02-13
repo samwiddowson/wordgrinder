@@ -94,7 +94,7 @@ test_not_saved(odtdoc, odtvalues)
 test_not_saved(txtdoc, txtvalues)
 test_not_saved(wgddoc, wgdvalues)
 
-Cmd.SaveDocumentSetAs(docsetfilename)
+Cmd.SaveAllDocuments(docsetfilename)
 
 AssertNull(htmldoc.changed)
 AssertNull(odtdoc.changed)
@@ -129,7 +129,7 @@ AssertEquals(true, odtdoc.changed)
 AssertEquals(true, txtdoc.changed)
 AssertEquals(true, wgddoc.changed)
 
-Cmd.SaveDocumentSetAs(docsetfilename)
+Cmd.SaveAllDocuments(docsetfilename)
 
 AssertNull(htmldoc.changed)
 AssertNull(odtdoc.changed)
