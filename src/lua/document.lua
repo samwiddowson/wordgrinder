@@ -166,7 +166,9 @@ DocumentSetClass =
 			FireEvent(Event.Changed)
 		end
 
-		Document = self.documents[name]
+		if self.documents[name] then
+			Document = self.documents[name]
+		end
 		if not Document then
 			Document = self.documents[1]
 		end

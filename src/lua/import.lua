@@ -132,6 +132,10 @@ function ImportFileWithUI(filename, title, callback, document)
 
 	end
 
+	if not document.name then
+		document.name = docname
+	end
+
 	-- Actually import the file.
 	local importsuccess = callback(fp, document)
 
@@ -156,6 +160,8 @@ function ImportFileWithUI(filename, title, callback, document)
 	if (#DocumentSet.documents == 2) and (DocumentSet.documents[1].virgin) then
 		DocumentSet:deleteDocument(DocumentSet.documents[1].name)
 	end
+
+	DocumentSet:setCurrent(docname)
 
 	QueueRedraw()
 	return true
