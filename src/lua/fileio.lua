@@ -129,7 +129,7 @@ end
 
 function Cmd.SaveDocumentSetAs(filename)
 	if not filename then
-		filename = FileBrowser("Save Document Set", "Save as:", true)
+		filename = FileBrowser("Save Session File", "Save as:", true)
 		if not filename then
 			return false
 		end

@@ -80,32 +80,38 @@ local ParagraphStylesMenu = addmenu("Paragraph Styles", {})
 
 local cp = Cmd.Checkpoint
 
-local ImportMenu = addmenu("Import new document",
+local FileOpenMenu = addmenu("Open document",
 {
-	{"FIodt",  "O", "Import ODT file...",        nil,         Cmd.ImportODTFile},
-	{"FIhtml", "H", "Import HTML file...",       nil,         Cmd.ImportHTMLFile},
-	{"FItxt",  "T", "Import text file...",       nil,         Cmd.ImportTextFile},
+	{"FOodt",  "O", "Open ODT file...",        nil,         Cmd.ImportODTFile},
+	{"FOhtml", "H", "Open HTML file...",       nil,         Cmd.ImportHTMLFile},
+	{"FOtxt",  "T", "Open text file...",       nil,         Cmd.ImportTextFile},
+	{"FOwgd",  "W", "Open WordGrinder file...",nil,         Cmd.ImportWGFile},
+})
+
+local SaveDocumentAsMenu = addmenu("Save current document as...",
+{
+	{"FSAodt",  "O", "Save As ODT...",                nil,         Cmd.SaveAsODTFile},
+	{"FSAhtml", "H", "Save As HTML...",               nil,         Cmd.SaveAsHTMLFile},
+	{"FSAtxt",  "T", "Save As plain text...",         nil,         Cmd.SaveAsTextFile},
+	{"FSAwgd",  "W", "Save As WordGrinder file...",   nil,         Cmd.SaveAsWGFile},
 })
 
 local ExportMenu = addmenu("Export current document",
 {
-	{"FEodt",  "O", "Export to ODT...",          nil,         Cmd.ExportODTFile},
-	{"FEhtml", "H", "Export to HTML...",         nil,         Cmd.ExportHTMLFile},
 	{"FEmd",   "M", "Export to Markdown...",     nil,         Cmd.ExportMarkdownFile},
-	{"FEtxt",  "T", "Export to plain text...",   nil,         Cmd.ExportTextFile},
 	{"FEtex",  "L", "Export to LaTeX...",        nil,         Cmd.ExportLatexFile},
 	{"FEtr",   "F", "Export to Troff...",        nil,         Cmd.ExportTroffFile},
 --	{"FErtf",  "R", "Export to Rtf...",          nil,         Cmd.ExportRTFFile},
 })
 
-local DocumentSettingsMenu = addmenu("Document settings",
+local SessionSettingsMenu = addmenu("Session settings",
 {
     {"FSautosave",     "A", "Autosave...",           nil,         Cmd.ConfigureAutosave},
     {"FSscrapbook",    "S", "Scrapbook...",          nil,         Cmd.ConfigureScrapbook},
     {"FSHTMLExport",   "H", "HTML export...",        nil,         Cmd.ConfigureHTMLExport},
-	{"FSPageCount",    "P", "Page count...",         nil,         Cmd.ConfigurePageCount},
-	{"FSSmartquotes",  "Q", "Smart quotes...",       nil,         Cmd.ConfigureSmartQuotes},
-	{"FSSpellchecker", "K", "Spellchecker...",       nil,         Cmd.ConfigureSpellchecker},
+    {"FSPageCount",    "P", "Page count...",         nil,         Cmd.ConfigurePageCount},
+    {"FSSmartquotes",  "Q", "Smart quotes...",       nil,         Cmd.ConfigureSmartQuotes},
+    {"FSSpellchecker", "K", "Spellchecker...",       nil,         Cmd.ConfigureSpellchecker},
 })
 
 local GlobalSettingsMenu = addmenu("Global settings",
@@ -118,17 +124,19 @@ local GlobalSettingsMenu = addmenu("Global settings",
 
 local FileMenu = addmenu("File",
 {
-	{"FN",         "N", "New document set",          nil,         Cmd.CreateBlankDocumentSet},
-	{"FO",         "O", "Load document set...",      nil,         Cmd.LoadDocumentSet},
-	{"FS",         "S", "Save document set",         "^S",        Cmd.SaveDocumentSet},
-	{"FA",         "A", "Save document set as...",   nil,         Cmd.SaveDocumentSetAs},
-	"-",
-	{"FB",         "B", "Add new blank document",    nil,         Cmd.AddBlankDocument},
-	{"FI",         "I", "Import new document ▷",     nil,         ImportMenu},
-	{"FE",         "E", "Export current document ▷", nil,         ExportMenu},
+	{"FDN",        "N", "Add new blank document",    nil,         Cmd.AddBlankDocument},
+	{"FDO",        "O", "Open document ▷",           nil,         FileOpenMenu},
+	{"FDS",        "S", "Save document",             nil,         Cmd.SaveCurrentDocument},
+	{"FDSA",       "V", "Save document as ▷",        nil,         SaveDocumentAsMenu},
+	{"FDSall",     "A", "Save all",                  nil,         Cmd.SaveAllDocuments},
+	{"FDE",        "E", "Export current document ▷", nil,         ExportMenu},
 	{"Fdocman",    "D", "Manage documents...",       nil,         Cmd.ManageDocumentsUI},
 	"-",
-	{"Fsettings",  "T", "Document settings ▷",       nil,         DocumentSettingsMenu},
+	{"FSsettings", "T", "Session settings ▷",        nil,         SessionSettingsMenu},
+	{"FSN",        "W", "New session",               nil,         Cmd.CreateBlankDocumentSet},
+	{"FSO",        "I", "Load session...",           nil,         Cmd.LoadDocumentSet},
+	{"FSA",        "R", "Save session as...",        nil,         Cmd.SaveDocumentSetAs},
+	"-",
 	{"Fglobals",   "G", "Global settings ▷",         nil,         GlobalSettingsMenu},
 	"-",
 	{"Fabout",     "Z", "About WordGrinder...",      nil,         Cmd.AboutWordGrinder},
