@@ -12,7 +12,7 @@ local function run_export_format_test(fileformat, comparison_filename)
 	local export_filename = os.tmpname()
 
 	document = CreateDocument()
-	document.name = comparison_filename
+	DocumentSet:addDocument(document, comparison_filename)
 	document[1] = CreateParagraph("P", "This is a test.")
 
 	exporter(export_filename, document)

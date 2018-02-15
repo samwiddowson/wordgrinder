@@ -24,20 +24,22 @@ DocumentSet.name = os.tmpname()
 local document = CreateDocument()
 document[1] = CreateParagraph("P", "This is a test.")
 
+DocumentSet:addDocument(document, "test.html")
 local htmlfilename = os.tmpname()
 local odtfilename = os.tmpname()
 local txtfilename = os.tmpname()
 local wgdfilename = os.tmpname()
 
-document.name = "test.html"
 Cmd.SaveAsHTMLFile(htmlfilename, document)
 test_document_content(document, htmlfilename, "test.html", "HTML")
 
 Cmd.SaveAsODTFile(odtfilename, document)
 test_document_content(document, odtfilename, "test.odt", "OpenDocument")
 
-Cmd.SaveAsTextFile(txtfilename, document)
-test_document_content(document, txtfilename, "test.txt", "Text")
-
 Cmd.SaveAsWGFile(wgdfilename, document)
 test_document_content(document, wgdfilename, "test.wgd", "WordGrinder")
+
+DocumentSet:setCurrent(document.name)
+AssertTableEquals(document, Document)
+Cmd.SaveAsTextFile(txtfilename)
+test_document_content(Document, txtfilename, "test.txt", "Text")

@@ -201,7 +201,7 @@ function ExportFileWithUI(filename, title, extension, callback, document)
 		return false
 	end
 	QueueRedraw()
-	return true
+	return true, filename
 end
 
 --- Converts a document into a local string.

@@ -27,16 +27,17 @@ function Cmd.SaveAsWGFile(filename, document)
 	end
 	document.ioFileFormat = GetIoFileFormats().WordGrinder.name
 	document.filename = filename
-	--document.name = Leafname(filename)
 	SaveDocument(document)
 	return Cmd.SaveDocumentSet()
 end
 
 function Cmd.ExportWGFile(filename, document)
-	local success = ExportFileWithUI(filename, "Export native WordGrider file", ".wgd", exportwordgrinder, document)
+	local success, filename = ExportFileWithUI(filename, "Export native WordGrider file", ".wgd", exportwordgrinder, document)
 	if success then
 		document.filename = filename
-		document.name = Leafname(filename)
+		if document.name ~= Leafname(filename) then
+			DocumentSet:renameDocument(document.name, Leafname(filename))
+		end
 	end
 	return success
 end

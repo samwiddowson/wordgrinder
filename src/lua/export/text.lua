@@ -62,17 +62,18 @@ function Cmd.SaveAsTextFile(filename, document)
 	end
 	document.ioFileFormat = GetIoFileFormats().Text.name
 	document.filename = filename
-	--document.name = Leafname(filename)
 	SaveDocument(document)
 	return Cmd.SaveDocumentSet()
 end
 
 function Cmd.ExportTextFile(filename, document)
-	local success = ExportFileWithUI(filename, "Export Text File", ".txt",
+	local success, filename = ExportFileWithUI(filename, "Export Text File", ".txt",
 		callback, document)
 	if success then
 		document.filename = filename
-		document.name = Leafname(filename)
+		if document.name ~= Leafname(filename) then
+			DocumentSet:renameDocument(document.name, Leafname(filename))
+		end
 	end
 	return success
 end

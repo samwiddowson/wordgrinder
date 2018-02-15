@@ -347,7 +347,7 @@ local function export_odt_with_ui(filename, title, extension, document)
 	end
 
 	QueueRedraw()
-	return true
+	return true, filename
 end
 
 
@@ -357,16 +357,17 @@ function Cmd.SaveAsODTFile(filename, document)
 	end
 	document.ioFileFormat = GetIoFileFormats().OpenDocument.name
 	document.filename = filename
-	--document.name = Leafname(filename)
 	SaveDocument(document)
 	return Cmd.SaveDocumentSet()
 end
 
 function Cmd.ExportODTFile(filename, document)
-	local success = export_odt_with_ui(filename, "Export ODT File", ".odt", document)
+	local success, filename = export_odt_with_ui(filename, "Export ODT File", ".odt", document)
 	if success then
 		document.filename = filename
-		document.name = Leafname(filename)
+		if document.name ~= Leafname(filename) then
+			DocumentSet:renameDocument(document.name, Leafname(filename))
+		end
 	end
 	return success
 end

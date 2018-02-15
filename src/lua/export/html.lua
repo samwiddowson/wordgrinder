@@ -152,17 +152,18 @@ function Cmd.SaveAsHTMLFile(filename, document)
 	end
 	document.ioFileFormat = GetIoFileFormats().HTML.name
 	document.filename = filename
-	--document.name = Leafname(filename)
 	SaveDocument(document)
 	return Cmd.SaveDocumentSet()
 end
 
 function Cmd.ExportHTMLFile(filename, document)
-	local success = ExportFileWithUI(filename, "Export HTML File", ".html",
+	local success, filename = ExportFileWithUI(filename, "Export HTML File", ".html",
 		callback, document)
 	if success then
 		document.filename = filename
-		document.name = Leafname(filename)
+		if document.name ~= Leafname(filename) then
+			DocumentSet:renameDocument(document.name, Leafname(filename))
+		end
 	end
 	return success
 end
