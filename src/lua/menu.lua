@@ -84,6 +84,7 @@ local ImportMenu = addmenu("Import new document",
 {
 	{"FIodt",  "O", "Import ODT file...",        nil,         Cmd.ImportODTFile},
 	{"FIhtml", "H", "Import HTML file...",       nil,         Cmd.ImportHTMLFile},
+	{"FImd",   "M", "Import Markdown file...",   nil,         Cmd.ImportMarkdownFile},
 	{"FItxt",  "T", "Import text file...",       nil,         Cmd.ImportTextFile},
 })
 

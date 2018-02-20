@@ -104,7 +104,6 @@ function ImportFileWithUI(filename, title, callback)
 	if not fp then
 		return nil
 	end
-
 	local document = callback(fp)
 	if not document then
 		ModalMessage(nil, "The import failed, probably because the file could not be found.")
