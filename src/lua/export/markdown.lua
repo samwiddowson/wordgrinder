@@ -108,6 +108,24 @@ local function callback(writer, document)
 	})
 end
 
+function Cmd.SaveAsMarkdownFile(filename, document)
+	if not document then
+		document = Document
+	end
+	document.ioFileFormat = GetIoFileFormats().Markdown.name
+	document.filename = filename
+	SaveDocument(document)
+	return Cmd.SaveDocumentSet()
+end
+
 function Cmd.ExportMarkdownFile(filename, document)
-	return ExportFileWithUI(filename, "Export Markdown File", ".md", callback, document)
+	local success, filename = ExportFileWithUI(filename, "Export Markdown File", ".md",
+		callback, document)
+	if success then
+		document.filename = filename
+		if document.name ~= Leafname(filename) then
+			DocumentSet:renameDocument(document.name, Leafname(filename))
+		end
+	end
+	return success
 end

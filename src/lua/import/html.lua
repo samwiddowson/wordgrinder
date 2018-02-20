@@ -19,24 +19,19 @@ local table_concat = table.concat
 -----------------------------------------------------------------------------
 -- The importer itself.
 
-local function loadhtmlfile(fp, document)
-	local data = fp:read("*a")
+function ParseHtmlData(data, document)
 
 	-- Collapse whitespace; this makes things far easier to parse.
-
 	data = data:gsub("[\t\f]", " ")
 	data = data:gsub("\r\n", "\n")
 
 	-- Canonicalise the string, making it valid UTF-8.
-
 	data = CanonicaliseString(data)
 	
 	-- Collapse complex elements.
-	
 	data = data:gsub("< ?(%w+) ?[^>]*(/?)>", "<%1%2>")
 	
 	-- Helper function for reading tokens from the HTML stream.
-	
 	local pos = 1
 	local len = data:len()
 	local function tokens()
@@ -95,6 +90,7 @@ local function loadhtmlfile(fp, document)
 		end
 	end
 
+	-- Define the element look-up table.
 	local elements =
 
 	-- Define the element look-up table.
@@ -145,8 +141,16 @@ local function loadhtmlfile(fp, document)
 	end
 	flush()
 	
-	document.ioFileFormat = GetIoFileFormats().HTML.name
 	return true
+end
+
+local function loadhtmlfile(fp, document)
+	local data = fp:read("*a")
+
+	ParseHtmlData(data, document)
+	document.ioFileFormat = GetIoFileFormats().HTML.name
+
+	return document
 end
 
 function Cmd.ImportHTMLFile(filename, document)

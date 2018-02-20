@@ -111,6 +111,7 @@ function ImportFileWithUI(filename, title, callback, document)
 		ModalMessage(nil, "The import failed because file "..filename.." could not be opened.")
 		return false
 	end
+
 	local docname = Leafname(filename)
 
 	if not document then

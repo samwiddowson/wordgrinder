@@ -84,6 +84,7 @@ local FileOpenMenu = addmenu("Open document",
 {
 	{"FOodt",  "O", "Open ODT file...",        nil,         Cmd.ImportODTFile},
 	{"FOhtml", "H", "Open HTML file...",       nil,         Cmd.ImportHTMLFile},
+	{"FOmd",   "M", "Open Markdown file...",   nil,         Cmd.ImportMarkdownFile},
 	{"FOtxt",  "T", "Open text file...",       nil,         Cmd.ImportTextFile},
 	{"FOwgd",  "W", "Open WordGrinder file...",nil,         Cmd.ImportWGFile},
 })
@@ -92,13 +93,13 @@ local SaveDocumentAsMenu = addmenu("Save current document as...",
 {
 	{"FSAodt",  "O", "Save As ODT...",                nil,         Cmd.SaveAsODTFile},
 	{"FSAhtml", "H", "Save As HTML...",               nil,         Cmd.SaveAsHTMLFile},
+	{"FSmd",    "M", "Save As Markdown...",           nil,         Cmd.SaveAsMarkdownFile},
 	{"FSAtxt",  "T", "Save As plain text...",         nil,         Cmd.SaveAsTextFile},
 	{"FSAwgd",  "W", "Save As WordGrinder file...",   nil,         Cmd.SaveAsWGFile},
 })
 
 local ExportMenu = addmenu("Export current document",
 {
-	{"FEmd",   "M", "Export to Markdown...",     nil,         Cmd.ExportMarkdownFile},
 	{"FEtex",  "L", "Export to LaTeX...",        nil,         Cmd.ExportLatexFile},
 	{"FEtr",   "F", "Export to Troff...",        nil,         Cmd.ExportTroffFile},
 --	{"FErtf",  "R", "Export to Rtf...",          nil,         Cmd.ExportRTFFile},
