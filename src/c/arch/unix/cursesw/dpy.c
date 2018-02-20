@@ -77,7 +77,7 @@ void dpy_setattr(int andmask, int ormask)
 			if (has_italics)
 				cattr |= A_ITALIC;
 			else
-				cattr |= A_BOLD;
+				cattr |= A_DIM;
 		#else
 			cattr |= A_BOLD;
 		#endif

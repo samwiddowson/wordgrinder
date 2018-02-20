@@ -16,7 +16,7 @@ local style_tab =
 	["H3"] = {false, '### ', '\n'},
 	["H4"] = {false, '#### ', '\n'},
 	["P"] =  {false, '', '\n'},
-	["L"] =  {false, '- ', ''},
+	["L"] =  {false, '1. ', ''},
 	["LB"] = {false, '- ', ''},
 	["Q"] =  {false, '> ', '\n'}, 
 	["V"] =  {false, '> ', '\n'},
@@ -66,11 +66,11 @@ local function callback(writer, document)
 		end,
 
 		italic_on = function()
-			writer("_")
+			writer("*")
 		end,
 
 		italic_off = function()
-			writer("_")
+			writer("*")
 		end,
 
 		underline_on = function()
