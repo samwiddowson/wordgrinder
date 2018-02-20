@@ -27,6 +27,13 @@ local wgdvalues = {
 	docname = "test.wgd",
 	ioFileFormat = "WordGrinder"
 }
+local mdvalues = {
+	testfile = os.tmpname(),
+	comparisonfile = "testdocs/test.md",
+	docname = "test.md",
+	ioFileFormat = "Markdown"
+}
+
 local function create_test_document(testvalues)
 	local doc = CreateDocument()
 	doc.filename = testvalues.testfile
@@ -81,18 +88,20 @@ local htmldoc = create_test_document(htmlvalues)
 local odtdoc = create_test_document(odtvalues)
 local txtdoc = create_test_document(txtvalues)
 local wgddoc = create_test_document(wgdvalues)
-
+local mddoc = create_test_document(mdvalues)
 htmldoc:touch()
 
 AssertEquals(true, htmldoc.changed)
 AssertNull(odtdoc.changed)
 AssertNull(txtdoc.changed)
 AssertNull(wgddoc.changed)
+AssertNull(mddoc.changed)
 
 test_not_saved(htmldoc, htmlvalues)
 test_not_saved(odtdoc, odtvalues)
 test_not_saved(txtdoc, txtvalues)
 test_not_saved(wgddoc, wgdvalues)
+test_not_saved(mddoc, mdvalues)
 
 Cmd.SaveAllDocuments(docsetfilename)
 
@@ -100,11 +109,13 @@ AssertNull(htmldoc.changed)
 AssertNull(odtdoc.changed)
 AssertNull(txtdoc.changed)
 AssertNull(wgddoc.changed)
+AssertNull(mddoc.changed)
 
 test_document_content(htmldoc, htmlvalues)
 test_not_saved(odtdoc, odtvalues)
 test_not_saved(txtdoc, txtvalues)
 test_not_saved(wgddoc, wgdvalues)
+test_not_saved(mddoc, mdvalues)
 
 test_docset_file_content(docsetfilename)
 
@@ -118,16 +129,19 @@ htmldoc = create_test_document(htmlvalues)
 odtdoc = create_test_document(odtvalues)
 txtdoc = create_test_document(txtvalues)
 wgddoc = create_test_document(wgdvalues)
+mddoc = create_test_document(mdvalues)
 
 htmldoc:touch()
 odtdoc:touch()
 txtdoc:touch()
 wgddoc:touch()
+mddoc:touch()
 
 AssertEquals(true, htmldoc.changed)
 AssertEquals(true, odtdoc.changed)
 AssertEquals(true, txtdoc.changed)
 AssertEquals(true, wgddoc.changed)
+AssertEquals(true, mddoc.changed)
 
 Cmd.SaveAllDocuments(docsetfilename)
 
@@ -135,11 +149,13 @@ AssertNull(htmldoc.changed)
 AssertNull(odtdoc.changed)
 AssertNull(txtdoc.changed)
 AssertNull(wgddoc.changed)
+AssertNull(mddoc.changed)
 
 test_document_content(htmldoc, htmlvalues)
 test_document_content(odtdoc, odtvalues)
 test_document_content(txtdoc, txtvalues)
 test_document_content(wgddoc, wgdvalues)
+test_document_content(mddoc, mdvalues)
 
 test_docset_file_content(docsetfilename)
 
@@ -150,3 +166,4 @@ test_reloaded_content(htmlvalues)
 test_reloaded_content(odtvalues)
 test_reloaded_content(txtvalues)
 test_reloaded_content(wgdvalues)
+test_reloaded_content(mdvalues)

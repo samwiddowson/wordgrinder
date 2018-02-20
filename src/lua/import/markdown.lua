@@ -31,6 +31,8 @@ local function loadmarkdownfile(fp, document)
 	htmldata = "<body>"..htmldata.."</body>"
 	ParseHtmlData(htmldata, document)
 	
+	document.ioFileFormat = "Markdown"
+	
 	return document
 end
 

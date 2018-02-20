@@ -43,6 +43,7 @@ local fileformats = GetIoFileFormats()
 
 run_import_format_test(fileformats.Text, "testdocs/test.txt")
 run_import_format_test(fileformats.HTML, "testdocs/test.html")
+run_import_format_test(fileformats.Markdown, "testdocs/test.md")
 run_import_format_test(fileformats.OpenDocument, "testdocs/test.odt")
 run_import_format_test(fileformats.WordGrinder, "testdocs/test.wgd")
 

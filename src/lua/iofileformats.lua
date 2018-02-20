@@ -32,7 +32,7 @@ function GetIoFileFormats()
 	iofileformats.Markdown = {
 		name = "Markdown",
 		exporter = Cmd.ExportMarkdownFile,
-		importer = nil }
+		importer = Cmd.ImportMarkdownFile }
 	iofileformats.troff = {
 		name = "troff",
 		exporter = Cmd.ExportTroffFile,
