@@ -139,7 +139,7 @@ function Cmd.SaveDocumentSetAs(filename)
 	end
 	DocumentSet.name = filename
 
-	ImmediateMessage("Saving...")
+	ImmediateMessage("Saving Session...")
 	DocumentSet:clean()
 	local r, e = SaveDocumentSetRaw(DocumentSet.name)
 	if not r then

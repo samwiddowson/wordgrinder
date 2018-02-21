@@ -50,13 +50,13 @@ do
 			-- Note that autosaved documents should have autosave *dis*abled!
 			
 			--settings.enabled = false
-			local r, e = SaveAllDocuments()
+			local r, e = Cmd.SaveAllDocuments()
 			--settings.enabled = true
 			
 			if not r then
 				ModalMessage("Autosave failed", "The document could not be autosaved: "..e)
 			else
-				NonmodalMessage("Autosaved as "..filename) 
+				NonmodalMessage("Autosaved all documents.") 
 				QueueRedraw()
 			end
 			
