@@ -71,6 +71,9 @@ local function redrawstatus()
 			Document.name or "",
 			"] ",
 			changed_tab[DocumentSet.changed] or "",
+			" | ",
+			Document.ioFileFormat,
+			" format | ",
 		}
 
 		SetReverse()

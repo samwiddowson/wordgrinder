@@ -33,7 +33,7 @@ function Cmd.ManageDocumentsUI()
 			return "redraw"
 		end
 	}
-	
+
 	local dialogue =
 	{
 		title = "Document Manager",
@@ -71,7 +71,7 @@ function Cmd.ManageDocumentsUI()
 			end
 			
 			if not DocumentSet:renameDocument(Document.name, name) then
-				ModalMessage("Name in use", "Sorry! There's already a document with that name in this document set.")
+				ModalMessage("Name in use", "Sorry! There's already an open document with that name.")
 				return "confirm"
 			end
 		
@@ -79,19 +79,24 @@ function Cmd.ManageDocumentsUI()
 		end,
 		
 		["x"] = function()
+			if Document.changed then
+				if not PromptForYesNo("Are you sure you want to close this document?", "The document '"
+					.. Document.name .."' has unsaved changes. Are you sure you want to close it?") then
+					return false
+				end
+			end
+
+			local tmpname
 			if (#browser.data == 1) then
-				ModalMessage("Unable to delete document", "You can't delete the last document from the document set.")
-				return "confirm"
+				tmpname = os.tmpname
+				Cmd.AddBlankDocument("tmpname")
 			end
-			
-			if not PromptForYesNo("Delete this document?", "Are you sure you want to delete the document '"
-				.. Document.name .."'? It will be removed from the current document set, and will be gone forever.") then
-				return false
-			end
-			
 			if not DocumentSet:deleteDocument(Document.name) then
 				ModalMessage("Unable to delete document", "You can't delete that document.")
 				return "confirm"
+			end
+			if tmpname then
+				DocumentSet:renameDocument(tmpname, "main")
 			end
 		
 			return "confirm"
@@ -111,13 +116,13 @@ function Cmd.ManageDocumentsUI()
 		Form.Label {
 			x1 = 1, y1 = -3,
 			x2 = -1, y2 = -3,
-			value = "U: Move document up              R: Rename document"
+			value = "U: Move document up"
 		},
 		
 		Form.Label {
 			x1 = 1, y1 = -2,
 			x2 = -1, y2 = -2,
-			value = "D: Move document down            X: Delete document"
+			value = "D: Move document down            X: Close document"
 		},
 		
 		Form.Label {

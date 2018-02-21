@@ -157,7 +157,7 @@ function Cmd.SaveDocumentSet(documentsetfilename)
 
 	local name = DocumentSet.name
 	if not name then
-		name = FileBrowser("Save Document Set", "Save as:", true)
+		name = FileBrowser("Save Session File", "Save as:", true)
 		if not name then
 			return false
 		end

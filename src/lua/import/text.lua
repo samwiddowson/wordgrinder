@@ -31,5 +31,9 @@ local function loadtextfile(fp, document)
 end
 
 function Cmd.ImportTextFile(filename, document)
-	return ImportFileWithUI(filename, "Import Text File", loadtextfile, document)
+	local r = ImportFileWithUI(filename, "Import Text File", loadtextfile, document)
+	if DocumentSet.name then
+		Cmd.SaveDocumentSet()
+	end
+	return r
 end

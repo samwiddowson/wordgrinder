@@ -25,5 +25,9 @@ function loadwordgrinderfile(fp, document)
 end
 
 function Cmd.ImportWGFile(filename, document)
-	return ImportFileWithUI(filename, "Import WordGrinder File", loadwordgrinderfile, document)
+	local r = ImportFileWithUI(filename, "Import WordGrinder File", loadwordgrinderfile, document)
+	if DocumentSet.name then
+		Cmd.SaveDocumentSet()
+	end
+	return r
 end

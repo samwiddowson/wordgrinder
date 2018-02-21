@@ -154,5 +154,9 @@ local function loadhtmlfile(fp, document)
 end
 
 function Cmd.ImportHTMLFile(filename, document)
-	return ImportFileWithUI(filename, "Import HTML File", loadhtmlfile, document)
+	local r = ImportFileWithUI(filename, "Import HTML File", loadhtmlfile, document)
+	if DocumentSet.name then
+		Cmd.SaveDocumentSet()
+	end
+	return r
 end

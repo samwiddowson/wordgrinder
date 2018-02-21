@@ -570,8 +570,10 @@ function RebuildDocumentsMenu(documents)
 	for id, document in ipairs(documents) do
 		local ak = ak_tab[document.name]
 		local shortcut
-		if (id <= 10) then
-			shortcut = tostring(id - 1)
+		if (id < 10) then
+			shortcut = tostring(id)
+		elseif (id == 10) then
+			shortcut = tostring(0)
 		else
 			shortcut = string.char(id + 54)
 		end

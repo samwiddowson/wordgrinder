@@ -283,5 +283,10 @@ function Cmd.ImportODTFile(filename, document)
 	end
 
 	QueueRedraw()
+
+	if DocumentSet.name then
+		Cmd.SaveDocumentSet()
+	end
+
 	return true
 end

@@ -37,5 +37,9 @@ local function loadmarkdownfile(fp, document)
 end
 
 function Cmd.ImportMarkdownFile(filename, document)
-	return ImportFileWithUI(filename, "Import Markdown File", loadmarkdownfile, document)
+	local r = ImportFileWithUI(filename, "Import Markdown File", loadmarkdownfile, document)
+	if DocumentSet.name then
+		Cmd.SaveDocumentSet()
+	end
+	return r
 end
