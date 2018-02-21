@@ -31,8 +31,8 @@ ifneq ($(strip $(shell type $(MAKENSIS) >/dev/null 2>&1; echo $$?)),0)
 endif
 
 # Application version and file format.
-VERSION := 0.7.1
-FILEFORMAT := 7
+VERSION := 0.7.1-sessions
+FILEFORMAT := 100
 DATE ?= $(shell date +'%-d %B %Y')
 
 # Which Lua do you want to use?
