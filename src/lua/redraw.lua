@@ -292,8 +292,13 @@ do
 		local wc = 0
 
 		for _, p in ipairs(Document) do
-			wc = wc + #p
+			for _, w in ipairs(p) do
+				if #w > 0 then
+					wc = wc + 1
+				end
+			end
 		end
+
 
 		Document.wordcount = wc
 	end
