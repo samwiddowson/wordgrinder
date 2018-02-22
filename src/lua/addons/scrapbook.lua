@@ -105,22 +105,22 @@ function Cmd.ConfigureScrapbook()
 		
 	local timestamp_checkbox =
 		Form.Checkbox {
-			x1 = 1, y1 = 3,
-			x2 = 33, y2 = 3,
+			x1 = 1, y1 = 1,
+			x2 = 33, y2 = 1,
 			label = "Enable timestamp",
 			value = settings.timestamp
 		}
 
 	local example_label =
 		Form.Label {
-			x1 = 1, y1 = 7,
-			x2 = -1, y2 = 7,
+			x1 = 1, y1 = 5,
+			x2 = -1, y2 = 5,
 		}
 		
 	local pattern_textfield =
 		Form.TextField {
-			x1 = 33, y1 = 5,
-			x2 = -1, y2 = 5,
+			x1 = 33, y1 = 3,
+			x2 = -1, y2 = 3,
 			value = settings.pattern,
 			
 			draw = function(self)
@@ -142,19 +142,11 @@ function Cmd.ConfigureScrapbook()
 		["KEY_RETURN"] = "confirm",
 		["KEY_ENTER"] = "confirm",
 		
-		Form.Label {
-			x1 = 1, y1 = 1,
-			x2 = 32, y2 = 1,
-			align = Form.Left,
-			value = "Name of scrapbook document:"
-		},
-		document_textfield,
-		
 		timestamp_checkbox,
 		
 		Form.Label {
-			x1 = 1, y1 = 5,
-			x2 = 32, y2 = 5,
+			x1 = 1, y1 = 3,
+			x2 = 32, y2 = 3,
 			align = Form.Left,
 			value = "Timestamp pattern:"
 		},
