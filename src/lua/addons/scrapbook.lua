@@ -56,6 +56,8 @@ function Cmd.PasteToScrapbook()
 	end
 	DocumentSet:setCurrent(settings.document)
 
+	Document.integrated = true
+
 	Cmd.GotoEndOfDocument()
 	Cmd.UnsetMark()
 	Cmd.SplitCurrentParagraph()

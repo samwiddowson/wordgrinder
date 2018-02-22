@@ -76,12 +76,22 @@ local function writetostream(object, write, writeo)
 		end
 	end
 
+	save("", object)
+
 	--export documents first, because exporting might set a new filename
 	if (GetClass(object) == DocumentSetClass) then
 		save(".current", object:_findDocument(object.current.name))
-	end
 
-	save("", object)
+		for i, d in ipairs(object.documents) do
+			if d.integrated then
+				write("#")
+				write(tostring(i))
+				write("\n")
+
+				DumpWordGrinderFile(write, d)
+			end
+		end
+	end
 
 	return true
 end
@@ -588,12 +598,14 @@ function loadfromstreams(fp)
 				firstdocumentname = d.name
 			end
 
-			local e = importdocument(d)
+			if not d.integrated then
+				local e = importdocument(d)
 
-			if e then
-				ModalMessage("Unable to import "..d.name, e)
-				QueueRedraw()
-				data:deleteDocument(d.name)
+				if e then
+					ModalMessage("Unable to import "..d.name, e)
+					QueueRedraw()
+					data:deleteDocument(d.name)
+				end
 			end
 		end
 		data:setCurrent(firstdocumentname)

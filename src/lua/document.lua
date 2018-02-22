@@ -63,7 +63,7 @@ DocumentSetClass =
 		local changeddocs = {}
 		local index = 1
 		for i, d in ipairs(self.documents) do
-			if d.changed then
+			if d.changed and not d.integrated then
 				changeddocs[index] = d
 				index = index + 1
 			end

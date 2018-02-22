@@ -5,7 +5,7 @@
 -----------------------------------------------------------------------------
 -- The exporter itself.
 
-local function exportwordgrinder(write, document)
+function DumpWordGrinderFile(write, document)
 	for _, p in ipairs(document) do
 		write(p.style)
 		for _, s in ipairs(p) do
@@ -32,7 +32,7 @@ function Cmd.SaveAsWGFile(filename, document)
 end
 
 function Cmd.ExportWGFile(filename, document)
-	local success, filename = ExportFileWithUI(filename, "Export native WordGrider file", ".wgd", exportwordgrinder, document)
+	local success, filename = ExportFileWithUI(filename, "Export native WordGrider file", ".wgd", DumpWordGrinderFile, document)
 	if success then
 		document.filename = filename
 		if document.name ~= Leafname(filename) then
