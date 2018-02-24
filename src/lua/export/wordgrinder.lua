@@ -25,19 +25,16 @@ function Cmd.SaveAsWGFile(filename, document)
 	if not document then
 		document = Document
 	end
+	if document.integrated then
+		ModalMessage(nil, "The Scrapbook document cannot be maintained separately to the session file. Try the Export menu if you wish to save an external copy.")
+		QueueRedraw()
+		return false
+	end
 	document.ioFileFormat = GetIoFileFormats().WordGrinder.name
-	document.filename = filename
-	SaveDocument(document)
-	return Cmd.SaveDocumentSet()
+	return SaveDocument(filename, document)
 end
 
 function Cmd.ExportWGFile(filename, document)
-	local success, filename = ExportFileWithUI(filename, "Export native WordGrider file", ".wgd", DumpWordGrinderFile, document)
-	if success then
-		document.filename = filename
-		if document.name ~= Leafname(filename) then
-			DocumentSet:renameDocument(document.name, Leafname(filename))
-		end
-	end
+	local success, filename = ExportFileWithUI(filename, "Export native WordGrinder file", ".wgd", DumpWordGrinderFile, document)
 	return success
 end

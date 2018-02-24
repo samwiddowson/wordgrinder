@@ -22,10 +22,6 @@ local function run_export_format_test(fileformat, comparison_filename)
 
 	AssertEquals(comparison_content, exported_content)
 
-	if fileformat.importer then
-		AssertEquals(export_filename, document.filename)
-		AssertEquals(Leafname(export_filename), document.name)
-	end
 end
 
 local fileformats = GetIoFileFormats()

@@ -150,21 +150,18 @@ function Cmd.SaveAsHTMLFile(filename, document)
 	if not document then
 		document = Document
 	end
+	if document.integrated then
+		ModalMessage(nil, "The Scrapbook document cannot be maintained separately to the session file. Try the Export menu if you wish to save an external copy.")
+		QueueRedraw()
+		return false
+	end
 	document.ioFileFormat = GetIoFileFormats().HTML.name
-	document.filename = filename
-	SaveDocument(document)
-	return Cmd.SaveDocumentSet()
+	return SaveDocument(filename, document)
 end
 
 function Cmd.ExportHTMLFile(filename, document)
 	local success, filename = ExportFileWithUI(filename, "Export HTML File", ".html",
 		callback, document)
-	if success then
-		document.filename = filename
-		if document.name ~= Leafname(filename) then
-			DocumentSet:renameDocument(document.name, Leafname(filename))
-		end
-	end
 	return success
 end
 

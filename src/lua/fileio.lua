@@ -180,27 +180,41 @@ function Cmd.SaveDocumentSet(documentsetfilename)
 	return Cmd.SaveDocumentSetAs(name)
 end
 
-function SaveDocument(document)
-	local fileformats = GetIoFileFormats()
-	local ff = document.ioFileFormat
+function SaveDocument(filename, document)
 
-	local exporter = fileformats[ff].exporter
+	local success = true
 
-	local success = exporter(document.filename, document)
+	if not document.integrated then 
+
+		local fileformats = GetIoFileFormats()
+		local ff = document.ioFileFormat
+		local exporter = fileformats[ff].exporter
+		success = exporter(filename, document)
+		if success then
+			document.filename = filename
+			if document.name ~= Leafname(filename) then
+				DocumentSet:renameDocument(document.name, Leafname(filename))
+			end
+		end
+	else
+		Cmd.SaveDocumentSet()
+	end
 
 	document:clean()
+
 
 	return success
 end
 
 function Cmd.SaveCurrentDocument(documentsetfilename)
-	SaveDocument(Document)
+	SaveDocument(Document.filename, Document)
 	return Cmd.SaveDocumentSet(documentsetfilename)
 end
 
 function Cmd.SaveAllDocuments(documentsetfilename)
+
 	for _, d in ipairs(DocumentSet:getChangedDocumentList()) do
-		SaveDocument(d)
+		SaveDocument(d.filename, d)
 	end
 	return Cmd.SaveDocumentSet(documentsetfilename)
 end

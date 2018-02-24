@@ -93,16 +93,21 @@ local SaveDocumentAsMenu = addmenu("Save current document as...",
 {
 	{"FSAodt",  "O", "Save As ODT...",                nil,         Cmd.SaveAsODTFile},
 	{"FSAhtml", "H", "Save As HTML...",               nil,         Cmd.SaveAsHTMLFile},
-	{"FSmd",    "M", "Save As Markdown...",           nil,         Cmd.SaveAsMarkdownFile},
+	{"FSAmd",   "M", "Save As Markdown...",           nil,         Cmd.SaveAsMarkdownFile},
 	{"FSAtxt",  "T", "Save As plain text...",         nil,         Cmd.SaveAsTextFile},
 	{"FSAwgd",  "W", "Save As WordGrinder file...",   nil,         Cmd.SaveAsWGFile},
 })
 
 local ExportMenu = addmenu("Export current document",
 {
+	{"FEodt",  "O", "Export to ODT...",          nil,         Cmd.ExportODTFile},
+	{"FEhtml", "H", "Export to HTML...",         nil,         Cmd.ExportHTMLFile},
 	{"FEtex",  "L", "Export to LaTeX...",        nil,         Cmd.ExportLatexFile},
-	{"FEtr",   "F", "Export to Troff...",        nil,         Cmd.ExportTroffFile},
+	{"FEmd",   "M", "Export to Markdown...",     nil,         Cmd.ExportMarkdownFile},
 --	{"FErtf",  "R", "Export to Rtf...",          nil,         Cmd.ExportRTFFile},
+	{"FEtxt",  "T", "Export to plain text...",   nil,         Cmd.ExportTextFile},
+	{"FEtr",   "F", "Export to Troff...",        nil,         Cmd.ExportTroffFile},
+	{"FEwgd",  "W", "Export To WordGrinder file...",  nil,    Cmd.ExportWGFile},
 })
 
 local SessionSettingsMenu = addmenu("Session settings",

@@ -97,6 +97,8 @@ AssertNull(txtdoc.changed)
 AssertNull(wgddoc.changed)
 AssertNull(mddoc.changed)
 
+AssertEquals(1, #DocumentSet:getChangedDocumentList())
+
 test_not_saved(htmldoc, htmlvalues)
 test_not_saved(odtdoc, odtvalues)
 test_not_saved(txtdoc, txtvalues)
@@ -142,6 +144,8 @@ AssertEquals(true, odtdoc.changed)
 AssertEquals(true, txtdoc.changed)
 AssertEquals(true, wgddoc.changed)
 AssertEquals(true, mddoc.changed)
+
+AssertEquals(5, #DocumentSet:getChangedDocumentList())
 
 Cmd.SaveAllDocuments(docsetfilename)
 
