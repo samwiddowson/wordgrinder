@@ -172,7 +172,7 @@ function Cmd.SaveDocumentSet(documentsetfilename)
 			return false
 		end
 		if name:find("/[^.]*$") then
-			name = name .. ".wg"
+			name = name .. ".wgs"
 		end
 		DocumentSet.name = name
 	end

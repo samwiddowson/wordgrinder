@@ -1,6 +1,6 @@
 require("tests/testsuite")
 
-local success = Cmd.LoadDocumentSet("testdocs/File-v8-test.wg")
+local success = Cmd.LoadDocumentSet("testdocs/File-v8-test.wgs")
 
 AssertEquals(true, success)
 
