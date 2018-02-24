@@ -366,5 +366,5 @@ end
 
 function Cmd.ExportODTFile(filename, document)
 	local success, filename = export_odt_with_ui(filename, "Export ODT File", ".odt", document)
-	return success
+	return success, filename
 end

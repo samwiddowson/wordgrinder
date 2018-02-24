@@ -2,25 +2,6 @@
 -- WordGrinder is licensed under the MIT open source license. See the COPYING
 -- file in this distribution for the full text.
 
-function Cmd.AddBlankDocument(name)
-	if not name then
-		name = PromptForString("Name of new document?", "Please enter the new document name:")
-		if not name or (name == "") then
-			return false
-		end
-	end
-
-	if DocumentSet.documents[name] then
-		ModalMessage("Name in use", "Sorry! There's already a document with that name in this document set.")
-		return false
-	end
-
-	DocumentSet:addDocument(CreateDocument(), name)
-	DocumentSet:setCurrent(name)
-	QueueRedraw()
-	return true
-end
-
 function Cmd.ManageDocumentsUI()
 	local browser = Form.Browser {
 		focusable = true,
@@ -86,19 +67,18 @@ function Cmd.ManageDocumentsUI()
 				end
 			end
 
-			local tmpname
 			if (#browser.data == 1) then
-				tmpname = os.tmpname
-				Cmd.AddBlankDocument("tmpname")
+				Cmd.AddBlankDocument()
 			end
 			if not DocumentSet:deleteDocument(Document.name) then
 				ModalMessage("Unable to delete document", "You can't delete that document.")
 				return "confirm"
 			end
-			if tmpname then
-				DocumentSet:renameDocument(tmpname, "main")
-			end
 		
+			if DocumentSet.name then
+				Cmd.SaveDocumentSet()
+			end
+
 			return "confirm"
 		end,
 		

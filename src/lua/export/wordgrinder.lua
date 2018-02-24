@@ -36,5 +36,5 @@ end
 
 function Cmd.ExportWGFile(filename, document)
 	local success, filename = ExportFileWithUI(filename, "Export native WordGrinder file", ".wgd", DumpWordGrinderFile, document)
-	return success
+	return success, filename
 end

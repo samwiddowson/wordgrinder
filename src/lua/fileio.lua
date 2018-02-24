@@ -189,8 +189,8 @@ function SaveDocument(filename, document)
 		local fileformats = GetIoFileFormats()
 		local ff = document.ioFileFormat
 		local exporter = fileformats[ff].exporter
-		success = exporter(filename, document)
-		if success then
+		success, filename = exporter(filename, document)
+		if filename then
 			document.filename = filename
 			if document.name ~= Leafname(filename) then
 				DocumentSet:renameDocument(document.name, Leafname(filename))

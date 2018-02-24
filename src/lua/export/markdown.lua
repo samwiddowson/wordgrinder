@@ -124,5 +124,5 @@ end
 function Cmd.ExportMarkdownFile(filename, document)
 	local success, filename = ExportFileWithUI(filename, "Export Markdown File", ".md",
 		callback, document)
-	return success
+	return success, filename
 end
