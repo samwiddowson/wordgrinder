@@ -463,6 +463,7 @@ emit("build ", OBJDIR.."/luascripts.c: luascripts ", table.concat({
     "src/lua/html.lua",
     "src/lua/margin.lua",
     "src/lua/xpattern.lua",
+    "src/lua/recents.lua",
     "src/lua/fileio.lua",
     "src/lua/iofileformats.lua",
     "src/lua/filewriter.lua",

@@ -76,6 +76,7 @@ local function submenu(menu)
 end
 
 local DocumentsMenu = addmenu("Documents", {})
+local RecentSessionsMenu = addmenu("Recent Sessions", {})
 local ParagraphStylesMenu = addmenu("Paragraph Styles", {})
 
 local cp = Cmd.Checkpoint
@@ -141,7 +142,8 @@ local FileMenu = addmenu("File",
 	{"FSsettings", "T", "Session settings ▷",        nil,         SessionSettingsMenu},
 	{"FSN",        "W", "New session",               nil,         Cmd.CreateBlankDocumentSet},
 	{"FSO",        "I", "Load session...",           nil,         Cmd.LoadDocumentSet},
-	{"FSA",        "R", "Save session as...",        nil,         Cmd.SaveDocumentSetAs},
+	{"FSA",        "K", "Save session as...",        nil,         Cmd.SaveDocumentSetAs},
+	{"RSM",        "R", "Recent sessions ▷",         nil,         RecentSessionsMenu},
 	"-",
 	{"Fglobals",   "G", "Global settings ▷",         nil,         GlobalSettingsMenu},
 	"-",
@@ -459,22 +461,24 @@ MenuClass = {
 			local f = item.fn
 
 			if IsMenu(f) then
-				menu_stack[#menu_stack+1] = {
-					menu = menu,
-					n = n,
-					top = top
-				}
+				if #f > 0 then
+					menu_stack[#menu_stack+1] = {
+						menu = menu,
+						n = n,
+						top = top
+					}
 
-				local r = self:runmenu(x+4, y+2, f)
-				menu_stack[#menu_stack] = nil
+					local r = self:runmenu(x+4, y+2, f)
+					menu_stack[#menu_stack] = nil
 
-				if (r == true) then
-					return true
-				elseif (r == false) then
-					return false
+					if (r == true) then
+						return true
+					elseif (r == false) then
+						return false
+					end
+
+					self:drawmenustack()
 				end
-
-				self:drawmenustack()
 			else
 				if not f then
 					ModalMessage("Not implemented yet", "Sorry, that feature isn't implemented yet. (This should never happen. Complain.)")
@@ -592,6 +596,44 @@ function RebuildDocumentsMenu(documents)
 	-- Hook it.
 
 	addmenu("Documents", m, DocumentsMenu)
+end
+
+function RebuildRecentsMenu()
+
+	-- Remember any accelerator keys and unhook the old menu.
+	local ak_tab = {}
+	for _, item in ipairs(RecentSessionsMenu) do
+		local ak = DocumentSet.menu.accelerators[item.id]
+		if ak then
+			ak_tab[item.label] = ak
+		end
+	end
+	submenu(RecentSessionsMenu)
+
+	-- Construct the new menu
+
+	local m  = {}
+	if GlobalSettings.recents then
+		for id, recent in ipairs(GlobalSettings.recents) do
+			local ak = ak_tab[recent]
+			local shortcut
+			if (id < 10) then
+				shortcut = tostring(id)
+			elseif (id == 10) then
+				shortcut = tostring(0)
+			else
+				shortcut = string.char(id + 54)
+			end
+			m[#m+1] = {"R"..id, shortcut, recent, ak,
+				function()
+					Cmd.LoadDocumentSet(recent)	
+				end}
+		end
+	end
+
+	--Hook it.
+
+	addmenu("Recent Sessions", m, RecentSessionsMenu)
 end
 
 function ListMenuItems()

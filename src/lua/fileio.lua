@@ -144,7 +144,7 @@ function Cmd.SaveDocumentSetAs(filename)
 			return false
 		end
 		if filename:find("/[^.]*$") then
-			filename = filename .. ".wg"
+			filename = filename .. ".wgs"
 		end
 	end
 	DocumentSet.name = filename
@@ -156,6 +156,9 @@ function Cmd.SaveDocumentSetAs(filename)
 		ModalMessage("Save failed", "The document could not be saved: "..e)
 	else
 		NonmodalMessage("Save succeeded.")
+		if DocumentSet.name then
+			SetMostRecentDocumentSet()
+		end
 	end
 	return r
 end
@@ -665,6 +668,7 @@ local function loaddocument(filename)
 	d:clean()
 
 	d.name = filename
+
 	return d
 end
 
@@ -703,6 +707,11 @@ function Cmd.LoadDocumentSet(filename)
 	end
 
 	DocumentSet = d
+
+	if d.name then
+		SetMostRecentDocumentSet()
+	end
+
 	Document = d.current
 
 	if (fileformat < FILEFORMAT) then
