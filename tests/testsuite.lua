@@ -1,3 +1,5 @@
+DisableUI = true
+
 function AssertEquals(want, got)
 	if (want ~= got) then
 		error(

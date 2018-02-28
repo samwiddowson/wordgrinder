@@ -463,6 +463,12 @@ local function findaction(table, object, key)
 end
 
 function Form.Run(dialogue, redraw, helptext)
+
+	--make sure we don't hold unit tests up waiting for input that won't come
+	if DisableUI then
+		return
+	end
+
 	-- Ensure the screen is properly sized.
 
 	ResizeScreen()
