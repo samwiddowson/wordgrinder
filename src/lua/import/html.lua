@@ -64,10 +64,16 @@ function ParseHtmlData(data, document)
 	
 	-- Skip tokens until we hit a <body>.
 	
+	local bodytagfound
 	for t in tokens do
 		if (t == "<body>") then
+			bodytagfound = true
 			break
 		end
+	end
+
+	if not bodytagfound then
+		return false, "No <body> tag was found in the HTML file."
 	end
 
 	local importer = CreateImporter(document)
@@ -147,10 +153,10 @@ end
 local function loadhtmlfile(fp, document)
 	local data = fp:read("*a")
 
-	ParseHtmlData(data, document)
+	local success, err = ParseHtmlData(data, document)
 	document.ioFileFormat = GetIoFileFormats().HTML.name
 
-	return document
+	return success, err
 end
 
 function Cmd.ImportHTMLFile(filename, document)

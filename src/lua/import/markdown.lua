@@ -29,11 +29,11 @@ local function loadmarkdownfile(fp, document)
 	local data = fp:read("*a")
 	htmldata = markdown(data)
 	htmldata = "<body>"..htmldata.."</body>"
-	ParseHtmlData(htmldata, document)
+	local success, err = ParseHtmlData(htmldata, document)
 	
 	document.ioFileFormat = "Markdown"
 	
-	return document
+	return success, err
 end
 
 function Cmd.ImportMarkdownFile(filename, document)
