@@ -7,7 +7,16 @@ local unpack = rawget(_G, "unpack") or table.unpack
 -----------------------------------------------------------------------------
 -- The importer itself.
 
+function verifyparagraphstyle(style)
+	for _, s in ipairs(DocumentStyles) do
+		if s.name == style then	
+			return true
+		end
+	end
+end
+
 function loadwordgrinderfile(fp, document)
+	local err
 	while true do
 		local line = fp:read("*l")
 		if not line or (line == ".") then
@@ -15,6 +24,9 @@ function loadwordgrinderfile(fp, document)
 		end
 
 		local words = SplitString(line, " ")
+		if (words[1] and not verifyparagraphstyle(words[1])) then
+			return false, "The file does not appear to be a valid WordGrinder format file."
+		end
 		local para = CreateParagraph(unpack(words))
 
 		document:appendParagraph(para)

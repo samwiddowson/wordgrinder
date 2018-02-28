@@ -138,10 +138,14 @@ function ImportFileWithUI(filename, title, callback, document)
 	end
 
 	-- Actually import the file.
-	local importsuccess = callback(fp, document)
+	local importsuccess, err = callback(fp, document)
 
 	if not importsuccess then
-		ModalMessage(nil, "The import of file, "..filename.." failed.")
+		local message = "The import of file, "..filename.." failed."
+		if err then
+			message = message.." "..err
+		end
+		ModalMessage(nil, message)
 		QueueRedraw()
 		return false
 	end
