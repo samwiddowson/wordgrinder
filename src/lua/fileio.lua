@@ -739,6 +739,10 @@ function Cmd.LoadDocumentSet(filename)
 			"Also, all keybindings defined in this file will get reset "..
 			"to their default values.")
 	end
+
+	if DocumentSet.lastdirectory then
+		lfs.chdir(DocumentSet.lastdirectory)
+	end
 	return true
 end
 

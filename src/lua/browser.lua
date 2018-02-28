@@ -109,6 +109,8 @@ function FileBrowser(title, message, saving, default)
 			return FileBrowser(title, message, saving)
 		end
 	end
+
+	DocumentSet.lastdirectory = lfs.currentdir()
 	
 	return lfs.currentdir().."/"..f
 end
