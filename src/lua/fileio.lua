@@ -709,9 +709,6 @@ function Cmd.LoadDocumentSet(filename)
 
 	DocumentSet = d
 
-	if d.name then
-		SetMostRecentDocumentSet()
-	end
 
 	Document = d.current
 
@@ -721,7 +718,11 @@ function Cmd.LoadDocumentSet(filename)
 
 		DocumentSet.fileformat = FILEFORMAT
 		DocumentSet.menu = CreateMenu()
+	elseif d.name then
+		--Don't set a newly-upgraded document set/session as recent until saved
+		SetMostRecentDocumentSet()
 	end
+
 	FireEvent(Event.RegisterAddons)
 	DocumentSet:touch()
 
@@ -807,6 +808,7 @@ function UpgradeDocument(oldversion)
 		-- This is an Wordgrinder DocumentSet file rather than a session file.
 		-- The session file should be saved elsewhere unless explicitly specified
                 -- by the user to overwrite the DocumentSet file.
+
 		DocumentSet.name = nil
 		for i, d in ipairs(DocumentSet.documents) do
 			d.filename = nil
