@@ -1,4 +1,4 @@
-DisableUI = true
+EnableUI = nil
 
 function AssertEquals(want, got)
 	if (want ~= got) then

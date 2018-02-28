@@ -17,6 +17,9 @@ local string_rep = string.rep
 
 Form = {}
 
+--provided to allow unit tests to disable the UI
+EnableUI = true
+
 -- Atoms.
 
 Form.Left = {}
@@ -465,7 +468,7 @@ end
 function Form.Run(dialogue, redraw, helptext)
 
 	--make sure we don't hold unit tests up waiting for input that won't come
-	if DisableUI then
+	if not EnableUI then
 		return
 	end
 
