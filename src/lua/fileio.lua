@@ -695,6 +695,7 @@ function Cmd.LoadDocumentSet(filename)
 		end
 		ModalMessage("Load failed", e)
 		QueueRedraw()
+		RemoveDocumentSetFromRecents()
 		return false
 	end
 
@@ -704,6 +705,7 @@ function Cmd.LoadDocumentSet(filename)
 		ModalMessage("Cannot load document", "This document belongs to a newer version of " ..
 			"WordGrinder and cannot be loaded. Sorry.")
 		QueueRedraw()
+		RemoveDocumentSetFromRecents()
 		return false
 	end
 
