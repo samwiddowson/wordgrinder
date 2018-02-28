@@ -65,7 +65,7 @@ WordGrinder dumpfile v4: this is a text file; diff me!
 .documents.4.ioFileFormat: "OpenDocument"
 .documents.4.viewmode: 1
 .documents.4.wordcount: 4
-.fileformat: 7
+.fileformat: 100
 .idletime: 3
 .menu.accelerators.BACKSPACE: "ZDPC"
 .menu.accelerators.DELETE: "ZDNC"

@@ -200,11 +200,12 @@ function SaveDocument(filename, document)
 			end
 		end
 	else
-		Cmd.SaveDocumentSet()
+		success = Cmd.SaveDocumentSet()
 	end
 
-	document:clean()
-
+	if success then
+		document:clean()
+	end
 
 	return success
 end
@@ -800,5 +801,16 @@ function UpgradeDocument(oldversion)
 			end
 		end
 		DocumentSet.styles = nil
+	end
+
+	if (oldversion < 100) then
+		-- This is an Wordgrinder DocumentSet file rather than a session file.
+		-- The session file should be saved elsewhere unless explicitly specified
+                -- by the user to overwrite the DocumentSet file.
+		DocumentSet.name = nil
+		for i, d in ipairs(DocumentSet.documents) do
+			d.filename = nil
+			d:touch()
+		end
 	end
 end

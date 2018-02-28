@@ -58,7 +58,7 @@ end
 
 local changed_tab =
 {
-	[true] = "CHANGED"
+	[true] = "*"
 }
 
 local function redrawstatus()
@@ -67,10 +67,11 @@ local function redrawstatus()
 	if DocumentSet.statusbar then
 		local s = {
 			Leafname(DocumentSet.name or "(unnamed)"),
+			changed_tab[DocumentSet.changed] or "",
 			"[",
 			Document.name or "",
+			changed_tab[Document.changed] or "",
 			"] ",
-			changed_tab[DocumentSet.changed] or "",
 			" | ",
 			Document.ioFileFormat,
 			" format | ",
