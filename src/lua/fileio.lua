@@ -623,6 +623,18 @@ function loadfromstreams(fp)
 					ModalMessage("Unable to import "..d.name, e)
 					QueueRedraw()
 					data:deleteDocument(d.name)
+
+				--on successful load, prevent overflow of cursor position
+				else
+					if d.cp > #d then
+						d.cp = #d
+					end
+					if d.cw > #d[d.cp] then
+						d.cw = #d[d.cp]
+					end
+					if d.co > #d[d.cp][d.cw] then
+						d.co = #d[d.cp][d.cw]
+					end
 				end
 			end
 		end
