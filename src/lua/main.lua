@@ -46,12 +46,39 @@ function QueueRedraw()
 	end
 end
 
+function Cmd.AddBlankDocument(name)
+
+	if not name then
+		local n = 1
+		if not DocumentSet.documents["untitled"] then
+			name = "untitled"
+		else
+			while DocumentSet.documents["untitled-"..n] do
+				n = n + 1
+			end
+			name = "untitled-"..tostring(n)
+		end
+	end
+
+	if DocumentSet.documents[name] then
+		ModalMessage("Name in use", "Sorry! There's already a document with that name in this document set.")
+		return false
+	end
+
+	DocumentSet:addDocument(CreateDocument(), name)
+	DocumentSet:setCurrent(name)
+	QueueRedraw()
+	return true
+end
+
+
 function ResetDocumentSet()
 	UpdateDocumentStyles()
 	DocumentSet = CreateDocumentSet()
 	DocumentSet.menu = CreateMenu()
 	Document = CreateDocument()
-	DocumentSet:addDocument(CreateDocument(), "main")
+	Cmd.AddBlankDocument()
+	DocumentSet.documents[1].virgin = true
 	RebuildParagraphStylesMenu(DocumentStyles)
 	RebuildDocumentsMenu(DocumentSet.documents)
 	DocumentSet:purge()

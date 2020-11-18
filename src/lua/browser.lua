@@ -109,6 +109,8 @@ function FileBrowser(title, message, saving, default)
 			return FileBrowser(title, message, saving)
 		end
 	end
+
+	DocumentSet.lastdirectory = lfs.currentdir()
 	
 	return lfs.currentdir().."/"..f
 end
@@ -138,6 +140,13 @@ function Browser(title, topmessage, bottommessage, data, default, defaultn)
 		return action
 	end
 
+	local function confirm(self, key)
+		if textfield.value == "" and data[browser.cursor].data == ".." then
+			textfield.value = ".."
+		end
+		return "confirm"
+	end
+
 	local function go_to_parent(self, key)
 		textfield.value = ".."
 		return "confirm"
@@ -159,8 +168,8 @@ function Browser(title, topmessage, bottommessage, data, default, defaultn)
 
 		["KEY_^C"] = "cancel",
 		["KEY_^P"] = go_to_parent,
-		["KEY_RETURN"] = "confirm",
-		["KEY_ENTER"] = "confirm",
+		["KEY_RETURN"] = confirm,
+		["KEY_ENTER"] = confirm,
 		
 		["KEY_UP"] = navigate,
 		["KEY_DOWN"] = navigate,

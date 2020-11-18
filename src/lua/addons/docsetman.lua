@@ -2,25 +2,6 @@
 -- WordGrinder is licensed under the MIT open source license. See the COPYING
 -- file in this distribution for the full text.
 
-function Cmd.AddBlankDocument(name)
-	if not name then
-		name = PromptForString("Name of new document?", "Please enter the new document name:")
-		if not name or (name == "") then
-			return false
-		end
-	end
-
-	if DocumentSet.documents[name] then
-		ModalMessage("Name in use", "Sorry! There's already a document with that name in this document set.")
-		return false
-	end
-
-	DocumentSet:addDocument(CreateDocument(), name)
-	DocumentSet:setCurrent(name)
-	QueueRedraw()
-	return true
-end
-
 function Cmd.ManageDocumentsUI()
 	local browser = Form.Browser {
 		focusable = true,
@@ -33,7 +14,7 @@ function Cmd.ManageDocumentsUI()
 			return "redraw"
 		end
 	}
-	
+
 	local dialogue =
 	{
 		title = "Document Manager",
@@ -71,7 +52,7 @@ function Cmd.ManageDocumentsUI()
 			end
 			
 			if not DocumentSet:renameDocument(Document.name, name) then
-				ModalMessage("Name in use", "Sorry! There's already a document with that name in this document set.")
+				ModalMessage("Name in use", "Sorry! There's already an open document with that name.")
 				return "confirm"
 			end
 		
@@ -79,21 +60,25 @@ function Cmd.ManageDocumentsUI()
 		end,
 		
 		["x"] = function()
+			if Document.changed then
+				if not PromptForYesNo("Are you sure you want to close this document?", "The document '"
+					.. Document.name .."' has unsaved changes. Are you sure you want to close it?") then
+					return false
+				end
+			end
+
 			if (#browser.data == 1) then
-				ModalMessage("Unable to delete document", "You can't delete the last document from the document set.")
-				return "confirm"
+				Cmd.AddBlankDocument()
 			end
-			
-			if not PromptForYesNo("Delete this document?", "Are you sure you want to delete the document '"
-				.. Document.name .."'? It will be removed from the current document set, and will be gone forever.") then
-				return false
-			end
-			
 			if not DocumentSet:deleteDocument(Document.name) then
 				ModalMessage("Unable to delete document", "You can't delete that document.")
 				return "confirm"
 			end
 		
+			if DocumentSet.name then
+				Cmd.SaveDocumentSet()
+			end
+
 			return "confirm"
 		end,
 		
@@ -111,13 +96,13 @@ function Cmd.ManageDocumentsUI()
 		Form.Label {
 			x1 = 1, y1 = -3,
 			x2 = -1, y2 = -3,
-			value = "U: Move document up              R: Rename document"
+			value = "U: Move document up"
 		},
 		
 		Form.Label {
 			x1 = 1, y1 = -2,
 			x2 = -1, y2 = -2,
-			value = "D: Move document down            X: Delete document"
+			value = "D: Move document down            X: Close document"
 		},
 		
 		Form.Label {

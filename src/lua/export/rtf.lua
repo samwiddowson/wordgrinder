@@ -143,7 +143,7 @@ local function callback(writer, document)
 	})
 end
 
-function Cmd.ExportRTFFile(filename)
+function Cmd.ExportRTFFile(filename, document)
 	return ExportFileWithUI(filename, "Export RTF File", ".rtf",
-		callback)
+		callback, document)
 end

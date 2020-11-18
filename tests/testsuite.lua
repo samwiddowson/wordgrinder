@@ -1,3 +1,5 @@
+EnableUI = nil
+
 function AssertEquals(want, got)
 	if (want ~= got) then
 		error(
@@ -131,6 +133,10 @@ function SaveGlobalSettings(f)
 	if f then
 		return oldSaveGlobalSettings(f)
 	end
+end
+
+function AssertClass(t, c)
+	AssertEquals(GetClass(t), c)
 end
 
 GlobalSettings.systemdictionary.filename = nil

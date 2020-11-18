@@ -16,7 +16,7 @@ local style_tab =
 	["H3"] = {false, '### ', '\n'},
 	["H4"] = {false, '#### ', '\n'},
 	["P"] =  {false, '', '\n'},
-	["L"] =  {false, '- ', ''},
+	["L"] =  {false, '1. ', ''},
 	["LB"] = {false, '- ', ''},
 	["Q"] =  {false, '> ', '\n'}, 
 	["V"] =  {false, '> ', '\n'},
@@ -66,11 +66,11 @@ local function callback(writer, document)
 		end,
 
 		italic_on = function()
-			writer("_")
+			writer("*")
 		end,
 
 		italic_off = function()
-			writer("_")
+			writer("*")
 		end,
 
 		underline_on = function()
@@ -108,6 +108,21 @@ local function callback(writer, document)
 	})
 end
 
-function Cmd.ExportMarkdownFile(filename)
-	return ExportFileWithUI(filename, "Export Markdown File", ".md", callback)
+function Cmd.SaveAsMarkdownFile(filename, document)
+	if not document then
+		document = Document
+	end
+	if document.integrated then
+		ModalMessage(nil, "The Scrapbook document cannot be maintained separately to the session file. Try the Export menu if you wish to save an external copy.")
+		QueueRedraw()
+		return false
+	end
+	document.ioFileFormat = GetIoFileFormats().Markdown.name
+	return SaveDocument(filename, document)
+end
+
+function Cmd.ExportMarkdownFile(filename, document)
+	local success, filename = ExportFileWithUI(filename, "Export Markdown File", ".md",
+		callback, document)
+	return success, filename
 end

@@ -4,6 +4,7 @@
 
 local ITALIC = wg.ITALIC
 local UNDERLINE = wg.UNDERLINE
+local BOLD = wg.BOLD
 local ParseWord = wg.parseword
 local WriteU8 = wg.writeu8
 local bitand = bit32.band
@@ -18,20 +19,25 @@ local table_concat = table.concat
 -----------------------------------------------------------------------------
 -- The importer itself.
 
-local function loadtextfile(fp, document)
-	for l in fp:lines() do
-		l = CanonicaliseString(l)
-		l = l:gsub("%c+", "")
-		local p = CreateParagraph("P", ParseStringIntoWords(l))
-		document:appendParagraph(p)
+local function loadmarkdownfile(fp, document)
+	if not document then 
+		document = CreateDocument()
 	end
+
+	local lines = {}
+
+	local data = fp:read("*a")
+	htmldata = markdown(data)
+	htmldata = "<body>"..htmldata.."</body>"
+	local success, err = ParseHtmlData(htmldata, document)
 	
-	document.ioFileFormat = GetIoFileFormats().Text.name
-	return true
+	document.ioFileFormat = "Markdown"
+	
+	return success, err
 end
 
-function Cmd.ImportTextFile(filename, document)
-	local r = ImportFileWithUI(filename, "Import Text File", loadtextfile, document)
+function Cmd.ImportMarkdownFile(filename, document)
+	local r = ImportFileWithUI(filename, "Import Markdown File", loadmarkdownfile, document)
 	if DocumentSet.name then
 		Cmd.SaveDocumentSet()
 	end

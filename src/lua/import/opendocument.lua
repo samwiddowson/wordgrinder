@@ -191,7 +191,7 @@ local function import_paragraphs(styles, importer, xml, defaultstyle)
 	end
 end
 
-function Cmd.ImportODTFile(filename)
+function Cmd.ImportODTFile(filename, document)
 	if not filename then
 		filename = FileBrowser("Import ODT File", "Import from:", false)
 		if not filename then
@@ -199,14 +199,22 @@ function Cmd.ImportODTFile(filename)
 		end
 	end
 	
-	ImmediateMessage("Importing...")	
+	local alreadyopendocument = DocumentSet:findDocumentByFilename(filename)
+	if alreadyopendocument then
+		DocumentSet:setCurrent(alreadyopendocument.name)
+		ModalMessage(nil, "This file is already open!")
+		QueueRedraw()
+		return false
+	end
+
+	ImmediateMessage("Importing "..filename.."...")	
 
 	-- Load the styles and content subdocuments.
 	
 	local stylesxml = ReadFromZip(filename, "styles.xml")
 	local contentxml = ReadFromZip(filename, "content.xml")
 	if not stylesxml or not contentxml then
-		ModalMessage(nil, "The import failed, probably because the file could not be found.")
+		ModalMessage(nil, "The import of "..filename.." failed, probably because the file could not be found.")
 		QueueRedraw()
 		return false
 	end
@@ -222,9 +230,29 @@ function Cmd.ImportODTFile(filename)
 	collect_styles(styles, contentxml)
 	resolve_parent_styles(styles)
 
-	-- Actually import the content.
+	if not document then
+		document = CreateDocument()
+		local docname = Leafname(filename)
+
+		--we didn't pass a document object in, so the DocumentSet stuff needs handling here
+		if DocumentSet.documents[docname] then
+			local id = 1
+			while true do
+				local f = docname.."-"..id
+				if not DocumentSet.documents[f] then
+					docname = f
+					break
+				end
+			end
+		end
+
+		DocumentSet:addDocument(document, docname)
+
+	end
+
 	
-	local document = CreateDocument()
+	document.ioFileFormat = GetIoFileFormats().OpenDocument.name
+	-- Actually import the content.
 	local importer = CreateImporter(document)
 	importer:reset()
 
@@ -246,26 +274,19 @@ function Cmd.ImportODTFile(filename)
 	if (#document > 1) then
 		document:deleteParagraphAt(1)
 	end
-	
-	-- Add the document to the document set.
-	
-	local docname = Leafname(filename)
 
-	if DocumentSet.documents[docname] then
-		local id = 1
-		while true do
-			local f = docname.."-"..id
-			if not DocumentSet.documents[f] then
-				docname = f
-				break
-			end
-		end
+	document.filename = filename
+
+	--replace the default document if it was the only one, and it hasn't been touched
+	if (#DocumentSet.documents == 2) and (DocumentSet.documents[1].virgin) then
+		DocumentSet:deleteDocument(DocumentSet.documents[1].name)
 	end
-	
-	DocumentSet:addDocument(document, docname)
-	DocumentSet:setCurrent(docname)
 
 	QueueRedraw()
+
+	if DocumentSet.name then
+		Cmd.SaveDocumentSet()
+	end
+
 	return true
 end
-

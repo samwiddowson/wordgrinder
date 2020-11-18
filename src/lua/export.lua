@@ -71,7 +71,7 @@ function ExportFileUsingCallbacks(document, cb)
 		oldbold = bold
 	end
 
-	for _, paragraph in ipairs(Document) do
+	for _, paragraph in ipairs(document) do
 		local name = paragraph.style
 
 		if (name == "L") or (name == "LB") then
@@ -136,9 +136,13 @@ end
 -- Prompts the user to export a document, and then calls
 -- exportcb(writer, document) to actually do the work.
 
-function ExportFileWithUI(filename, title, extension, callback)
+function ExportFileWithUI(filename, title, extension, callback, document)
+	if not document then
+		document = Document
+	end
+
 	if not filename then
-		filename = Document.name
+		filename = document.name
 		if filename then
 			if not filename:find("%..-$") then
 				filename = filename .. extension
@@ -159,24 +163,45 @@ function ExportFileWithUI(filename, title, extension, callback)
 		end
 	end
 
-	ImmediateMessage("Exporting...")
-	local fp, e = io.open(filename, "w")
-	if not fp then
-		ModalMessage(nil, "Unable to open the output file "..e..".")
+	local alreadyopendocument = DocumentSet:findDocumentByFilename(filename)
+	if alreadyopendocument and (alreadyopendocument~=document) then
+		ModalMessage(nil, "The file, '"..filename.."' refers to a currently-open document. Please close the document or choose another file.")
 		QueueRedraw()
 		return false
 	end
 
-	local fpw = fp.write
-	local writer = function(...)
-		fpw(fp, ...)
+	ImmediateMessage("Exporting...")
+
+	local filewriter = CreateFileWriter(filename)
+
+	if filewriter.err then
+		ModalMessage(nil, "There was a problem opening the output file: "..filewriter.err..".")
+		QueueRedraw()
+		return false
 	end
 
-	callback(writer, Document)
-	fp:close()
+	local fileopensuccess = filewriter:open()
 
+	if not fileopensuccess then
+		ModalMessage(nil, "Unable to open the output file "..filewriter.err..".")
+		QueueRedraw()
+		return false
+	end
+
+	local write = function(...)
+		filewriter:writeToBuffer(table.concat({...}))
+	end
+
+	callback(write, document)
+	filewriter:finalize()
+
+	if filewriter.err then
+		ModalMessage(nil, "There was a problem saving the data to the output file "..filewriter.err..".")
+		QueueRedraw()
+		return false
+	end
 	QueueRedraw()
-	return true
+	return true, filename
 end
 
 --- Converts a document into a local string.

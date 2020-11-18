@@ -627,6 +627,9 @@ end
 
 function Cmd.TerminateProgram()
 	if ConfirmDocumentErasure() then
+		if DocumentSet.name then	
+			Cmd.SaveDocumentSet()
+		end
 		os.exit()
 	end
 

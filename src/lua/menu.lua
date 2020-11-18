@@ -76,36 +76,49 @@ local function submenu(menu)
 end
 
 local DocumentsMenu = addmenu("Documents", {})
+local RecentSessionsMenu = addmenu("Recent Sessions", {})
 local ParagraphStylesMenu = addmenu("Paragraph Styles", {})
 
 local cp = Cmd.Checkpoint
 
-local ImportMenu = addmenu("Import new document",
+local FileOpenMenu = addmenu("Open document",
 {
-	{"FIodt",  "O", "Import ODT file...",        nil,         Cmd.ImportODTFile},
-	{"FIhtml", "H", "Import HTML file...",       nil,         Cmd.ImportHTMLFile},
-	{"FItxt",  "T", "Import text file...",       nil,         Cmd.ImportTextFile},
+	{"FOodt",  "O", "Open ODT file...",        nil,         Cmd.ImportODTFile},
+	{"FOhtml", "H", "Open HTML file...",       nil,         Cmd.ImportHTMLFile},
+	{"FOmd",   "M", "Open Markdown file...",   nil,         Cmd.ImportMarkdownFile},
+	{"FOtxt",  "T", "Open text file...",       nil,         Cmd.ImportTextFile},
+	{"FOwgd",  "W", "Open WordGrinder file...",nil,         Cmd.ImportWGFile},
+})
+
+local SaveDocumentAsMenu = addmenu("Save current document as...",
+{
+	{"FSAodt",  "O", "Save As ODT...",                nil,         Cmd.SaveAsODTFile},
+	{"FSAhtml", "H", "Save As HTML...",               nil,         Cmd.SaveAsHTMLFile},
+	{"FSAmd",   "M", "Save As Markdown...",           nil,         Cmd.SaveAsMarkdownFile},
+	{"FSAtxt",  "T", "Save As plain text...",         nil,         Cmd.SaveAsTextFile},
+	{"FSAwgd",  "W", "Save As WordGrinder file...",   nil,         Cmd.SaveAsWGFile},
 })
 
 local ExportMenu = addmenu("Export current document",
 {
 	{"FEodt",  "O", "Export to ODT...",          nil,         Cmd.ExportODTFile},
 	{"FEhtml", "H", "Export to HTML...",         nil,         Cmd.ExportHTMLFile},
-	{"FEmd",   "M", "Export to Markdown...",     nil,         Cmd.ExportMarkdownFile},
-	{"FEtxt",  "T", "Export to plain text...",   nil,         Cmd.ExportTextFile},
 	{"FEtex",  "L", "Export to LaTeX...",        nil,         Cmd.ExportLatexFile},
-	{"FEtr",   "F", "Export to Troff...",        nil,         Cmd.ExportTroffFile},
+	{"FEmd",   "M", "Export to Markdown...",     nil,         Cmd.ExportMarkdownFile},
 --	{"FErtf",  "R", "Export to Rtf...",          nil,         Cmd.ExportRTFFile},
+	{"FEtxt",  "T", "Export to plain text...",   nil,         Cmd.ExportTextFile},
+	{"FEtr",   "F", "Export to Troff...",        nil,         Cmd.ExportTroffFile},
+	{"FEwgd",  "W", "Export To WordGrinder file...",  nil,    Cmd.ExportWGFile},
 })
 
-local DocumentSettingsMenu = addmenu("Document settings",
+local SessionSettingsMenu = addmenu("Session settings",
 {
     {"FSautosave",     "A", "Autosave...",           nil,         Cmd.ConfigureAutosave},
     {"FSscrapbook",    "S", "Scrapbook...",          nil,         Cmd.ConfigureScrapbook},
     {"FSHTMLExport",   "H", "HTML export...",        nil,         Cmd.ConfigureHTMLExport},
-	{"FSPageCount",    "P", "Page count...",         nil,         Cmd.ConfigurePageCount},
-	{"FSSmartquotes",  "Q", "Smart quotes...",       nil,         Cmd.ConfigureSmartQuotes},
-	{"FSSpellchecker", "K", "Spellchecker...",       nil,         Cmd.ConfigureSpellchecker},
+    {"FSPageCount",    "P", "Page count...",         nil,         Cmd.ConfigurePageCount},
+    {"FSSmartquotes",  "Q", "Smart quotes...",       nil,         Cmd.ConfigureSmartQuotes},
+    {"FSSpellchecker", "K", "Spellchecker...",       nil,         Cmd.ConfigureSpellchecker},
 })
 
 local GlobalSettingsMenu = addmenu("Global settings",
@@ -118,17 +131,20 @@ local GlobalSettingsMenu = addmenu("Global settings",
 
 local FileMenu = addmenu("File",
 {
-	{"FN",         "N", "New document set",          nil,         Cmd.CreateBlankDocumentSet},
-	{"FO",         "O", "Load document set...",      nil,         Cmd.LoadDocumentSet},
-	{"FS",         "S", "Save document set",         "^S",        Cmd.SaveCurrentDocument},
-	{"FA",         "A", "Save document set as...",   nil,         Cmd.SaveCurrentDocumentAs},
-	"-",
-	{"FB",         "B", "Add new blank document",    nil,         Cmd.AddBlankDocument},
-	{"FI",         "I", "Import new document ▷",     nil,         ImportMenu},
-	{"FE",         "E", "Export current document ▷", nil,         ExportMenu},
+	{"FDN",        "N", "Add new blank document",    nil,         Cmd.AddBlankDocument},
+	{"FDO",        "O", "Open document ▷",           nil,         FileOpenMenu},
+	{"FDS",        "S", "Save document",             nil,         Cmd.SaveCurrentDocument},
+	{"FDSA",       "V", "Save document as ▷",        nil,         SaveDocumentAsMenu},
+	{"FDSall",     "A", "Save all",                  nil,         Cmd.SaveAllDocuments},
+	{"FDE",        "E", "Export current document ▷", nil,         ExportMenu},
 	{"Fdocman",    "D", "Manage documents...",       nil,         Cmd.ManageDocumentsUI},
 	"-",
-	{"Fsettings",  "T", "Document settings ▷",       nil,         DocumentSettingsMenu},
+	{"FSsettings", "T", "Session settings ▷",        nil,         SessionSettingsMenu},
+	{"FSN",        "W", "New session",               nil,         Cmd.CreateBlankDocumentSet},
+	{"FSO",        "I", "Load session...",           nil,         Cmd.LoadDocumentSet},
+	{"FSA",        "K", "Save session as...",        nil,         Cmd.SaveDocumentSetAs},
+	{"RSM",        "R", "Recent sessions ▷",         nil,         RecentSessionsMenu},
+	"-",
 	{"Fglobals",   "G", "Global settings ▷",         nil,         GlobalSettingsMenu},
 	"-",
 	{"Fabout",     "Z", "About WordGrinder...",      nil,         Cmd.AboutWordGrinder},
@@ -445,22 +461,24 @@ MenuClass = {
 			local f = item.fn
 
 			if IsMenu(f) then
-				menu_stack[#menu_stack+1] = {
-					menu = menu,
-					n = n,
-					top = top
-				}
+				if #f > 0 then
+					menu_stack[#menu_stack+1] = {
+						menu = menu,
+						n = n,
+						top = top
+					}
 
-				local r = self:runmenu(x+4, y+2, f)
-				menu_stack[#menu_stack] = nil
+					local r = self:runmenu(x+4, y+2, f)
+					menu_stack[#menu_stack] = nil
 
-				if (r == true) then
-					return true
-				elseif (r == false) then
-					return false
+					if (r == true) then
+						return true
+					elseif (r == false) then
+						return false
+					end
+
+					self:drawmenustack()
 				end
-
-				self:drawmenustack()
 			else
 				if not f then
 					ModalMessage("Not implemented yet", "Sorry, that feature isn't implemented yet. (This should never happen. Complain.)")
@@ -561,8 +579,10 @@ function RebuildDocumentsMenu(documents)
 	for id, document in ipairs(documents) do
 		local ak = ak_tab[document.name]
 		local shortcut
-		if (id <= 10) then
-			shortcut = tostring(id - 1)
+		if (id < 10) then
+			shortcut = tostring(id)
+		elseif (id == 10) then
+			shortcut = tostring(0)
 		else
 			shortcut = string.char(id + 54)
 		end
@@ -576,6 +596,44 @@ function RebuildDocumentsMenu(documents)
 	-- Hook it.
 
 	addmenu("Documents", m, DocumentsMenu)
+end
+
+function RebuildRecentsMenu()
+
+	-- Remember any accelerator keys and unhook the old menu.
+	local ak_tab = {}
+	for _, item in ipairs(RecentSessionsMenu) do
+		local ak = DocumentSet.menu.accelerators[item.id]
+		if ak then
+			ak_tab[item.label] = ak
+		end
+	end
+	submenu(RecentSessionsMenu)
+
+	-- Construct the new menu
+
+	local m  = {}
+	if GlobalSettings.recents then
+		for id, recent in ipairs(GlobalSettings.recents) do
+			local ak = ak_tab[recent]
+			local shortcut
+			if (id < 10) then
+				shortcut = tostring(id)
+			elseif (id == 10) then
+				shortcut = tostring(0)
+			else
+				shortcut = string.char(id + 54)
+			end
+			m[#m+1] = {"R"..id, shortcut, recent, ak,
+				function()
+					Cmd.LoadDocumentSet(recent)	
+				end}
+		end
+	end
+
+	--Hook it.
+
+	addmenu("Recent Sessions", m, RecentSessionsMenu)
 end
 
 function ListMenuItems()

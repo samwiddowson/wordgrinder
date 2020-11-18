@@ -19,24 +19,19 @@ local table_concat = table.concat
 -----------------------------------------------------------------------------
 -- The importer itself.
 
-local function loadhtmlfile(fp)
-	local data = fp:read("*a")
+function ParseHtmlData(data, document)
 
 	-- Collapse whitespace; this makes things far easier to parse.
-
 	data = data:gsub("[\t\f]", " ")
 	data = data:gsub("\r\n", "\n")
 
 	-- Canonicalise the string, making it valid UTF-8.
-
 	data = CanonicaliseString(data)
 	
 	-- Collapse complex elements.
-	
 	data = data:gsub("< ?(%w+) ?[^>]*(/?)>", "<%1%2>")
 	
 	-- Helper function for reading tokens from the HTML stream.
-	
 	local pos = 1
 	local len = data:len()
 	local function tokens()
@@ -69,15 +64,18 @@ local function loadhtmlfile(fp)
 	
 	-- Skip tokens until we hit a <body>.
 	
+	local bodytagfound
 	for t in tokens do
 		if (t == "<body>") then
+			bodytagfound = true
 			break
 		end
 	end
 
-	-- Define the element look-up table.
-	
-	local document = CreateDocument()
+	if not bodytagfound then
+		return false, "No <body> tag was found in the HTML file."
+	end
+
 	local importer = CreateImporter(document)
 	local style = "P"
 	local pre = false
@@ -98,7 +96,10 @@ local function loadhtmlfile(fp)
 		end
 	end
 
+	-- Define the element look-up table.
 	local elements =
+
+	-- Define the element look-up table.
 	{
 		[" "] = flushword,
 		["<p>"] = flush,
@@ -145,10 +146,23 @@ local function loadhtmlfile(fp)
 		end
 	end
 	flush()
-
-	return document
+	
+	return true
 end
 
-function Cmd.ImportHTMLFile(filename)
-	return ImportFileWithUI(filename, "Import HTML File", loadhtmlfile)
+local function loadhtmlfile(fp, document)
+	local data = fp:read("*a")
+
+	local success, err = ParseHtmlData(data, document)
+	document.ioFileFormat = GetIoFileFormats().HTML.name
+
+	return success, err
+end
+
+function Cmd.ImportHTMLFile(filename, document)
+	local r = ImportFileWithUI(filename, "Import HTML File", loadhtmlfile, document)
+	if DocumentSet.name then
+		Cmd.SaveDocumentSet()
+	end
+	return r
 end

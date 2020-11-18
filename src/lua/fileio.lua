@@ -20,6 +20,7 @@ local unpack = rawget(_G, "unpack") or table.unpack
 local MAGIC = "WordGrinder dumpfile v1: this is not a text file!"
 local ZMAGIC = "WordGrinder dumpfile v2: this is not a text file!"
 local TMAGIC = "WordGrinder dumpfile v3: this is a text file; diff me!"
+local SMAGIC = "WordGrinder dumpfile v4: this is a text file; diff me!"
 
 local STOP = 0
 local TABLE = 1
@@ -77,27 +78,18 @@ local function writetostream(object, write, writeo)
 
 	save("", object)
 
+	--export documents first, because exporting might set a new filename
 	if (GetClass(object) == DocumentSetClass) then
 		save(".current", object:_findDocument(object.current.name))
 
 		for i, d in ipairs(object.documents) do
-			write("#")
-			write(tostring(i))
-			write("\n")
-
-			for _, p in ipairs(d) do
-				write(p.style)
-
-				for _, s in ipairs(p) do
-					write(" ")
-					write(s)
-				end
-
+			if d.integrated then
+				write("#")
+				write(tostring(i))
 				write("\n")
-			end
 
-			write(".")
-			write("\n")
+				DumpWordGrinderFile(write, d)
+			end
 		end
 	end
 
@@ -107,61 +99,37 @@ end
 function SaveToStream(filename, object)
 	-- Ensure the destination file is writeable.
 
-	local fp, e = io.open(filename, "wb")
-	if not fp then
-		return nil, e
+	local filewriter = CreateFileWriter(filename)
+	local fp, e = io.open(filename, "w")
+	if filewriter.err then
+		return nil, filewriter.err
 	end
-	fp:close()
 
 	-- However, write the file to a *different* filename
 	-- (so that crashes during writing doesn't corrupt the file).
 
-	fp, e = io.open(filename..".new", "wb")
-	if not fp then
-		return nil, e
+	local opensuccess = filewriter:open()
+	if not opensuccess then
+		return nil, filewriter.err
 	end
 
-	local fpw = fp.write
-
-	local ss = {}
-	local write = function(s)
-		ss[#ss+1] = s
+	local write = function(...)
+		filewriter:writeToBuffer(table.concat({...}))
 	end
 
 	local writeo = function(k, v)
-		write(k)
-		write(": ")
-		write(v)
-		write("\n")
+		write(k, ": ", v, "\n")
 	end
+
+	write(SMAGIC,"\n")
 
 	local r = writetostream(object, write, writeo)
-	local s = table.concat(ss)
-
-	local e
-	if r then
-		r, e = fp:write(TMAGIC, "\n", s)
-	end
-	if r then
-		r, e = fp:close()
-	end
-
-	-- Once done, do a complicated series of renames so that we
-	-- don't remove the old file until we're sure the new one has
-	-- been written correctly. Note that accurs�d Windows doesn't
-	-- support clobbering renames...
 
 	if r then
-		r, e = os.rename(filename, filename..".old")
-		if not e then
-			r, e = os.rename(filename..".new", filename)
-		end
-		if not e then
-			os.remove(filename..".old")
-		end
+		filewriter:finalize()
 	end
 
-	return r, e
+	return r, filewriter.err
 end
 
 function SaveDocumentSetRaw(filename)
@@ -169,43 +137,90 @@ function SaveDocumentSetRaw(filename)
 	return SaveToStream(filename, DocumentSet)
 end
 
-function Cmd.SaveCurrentDocumentAs(filename)
+function Cmd.SaveDocumentSetAs(filename)
 	if not filename then
-		filename = FileBrowser("Save Document Set", "Save as:", true)
+		filename = FileBrowser("Save Session File", "Save as:", true)
 		if not filename then
 			return false
 		end
 		if filename:find("/[^.]*$") then
-			filename = filename .. ".wg"
+			filename = filename .. ".wgs"
 		end
 	end
 	DocumentSet.name = filename
 
-	ImmediateMessage("Saving...")
+	ImmediateMessage("Saving Session...")
 	DocumentSet:clean()
 	local r, e = SaveDocumentSetRaw(DocumentSet.name)
 	if not r then
 		ModalMessage("Save failed", "The document could not be saved: "..e)
 	else
 		NonmodalMessage("Save succeeded.")
+		if DocumentSet.name then
+			SetMostRecentDocumentSet()
+		end
 	end
 	return r
 end
 
-function Cmd.SaveCurrentDocument()
+function Cmd.SaveDocumentSet(documentsetfilename)
+	if documentsetfilename then
+		DocumentSet.name = documentsetfilename
+	end
+
 	local name = DocumentSet.name
 	if not name then
-		name = FileBrowser("Save Document Set", "Save as:", true)
+		name = FileBrowser("Save Session File", "Save as:", true)
 		if not name then
 			return false
 		end
 		if name:find("/[^.]*$") then
-			name = name .. ".wg"
+			name = name .. ".wgs"
 		end
 		DocumentSet.name = name
 	end
 
-	return Cmd.SaveCurrentDocumentAs(name)
+	return Cmd.SaveDocumentSetAs(name)
+end
+
+function SaveDocument(filename, document)
+
+	local success = true
+
+	if not document.integrated then 
+
+		local fileformats = GetIoFileFormats()
+		local ff = document.ioFileFormat
+		local exporter = fileformats[ff].exporter
+		success, filename = exporter(filename, document)
+		if filename then
+			document.filename = filename
+			if document.name ~= Leafname(filename) then
+				DocumentSet:renameDocument(document.name, Leafname(filename))
+			end
+		end
+	else
+		success = Cmd.SaveDocumentSet()
+	end
+
+	if success then
+		document:clean()
+	end
+
+	return success
+end
+
+function Cmd.SaveCurrentDocument(documentsetfilename)
+	SaveDocument(Document.filename, Document)
+	return Cmd.SaveDocumentSet(documentsetfilename)
+end
+
+function Cmd.SaveAllDocuments(documentsetfilename)
+
+	for _, d in ipairs(DocumentSet:getChangedDocumentList()) do
+		SaveDocument(d.filename, d)
+	end
+	return Cmd.SaveDocumentSet(documentsetfilename)
 end
 
 local function loadfromstream(fp)
@@ -553,6 +568,82 @@ function loadfromstreamt(fp)
 	return data
 end
 
+function loadfromstreams(fp)
+	--since we're not actually listing document info at the end of the document set file at all any more,
+        -- we should be able to safely call the previous "TMAGIC" loader for the document set information
+        -- and document metadata
+	local data = loadfromstreamt(fp)
+
+	if (#data.documents > 0) then
+		local fileformats = GetIoFileFormats()
+
+		local function importdocument(doc)
+			--If the document couldn't be imported, warn the user with details and delete it from the documentset
+			local err
+			if not doc.ioFileFormat then
+				err = "No file format specified for document "..doc.name
+				return err
+			end
+
+			local importer = fileformats[doc.ioFileFormat].importer
+			if not importer then
+				err = "Import not supported for file format: "..doc.ioFileFormat
+				return err
+			end
+
+			if not doc.filename then
+				err = "No file path was specified for the document, "..doc.name..
+						".\nSomething must have gone wrong saving the session information."
+				return err
+			end
+
+			local importsuccess, err = importer(doc.filename, doc)
+
+			if not importsuccess then
+				--TODO: pass on err specified by importer
+				err = "Something went wrong trying to load the file: %s"..doc.filename
+				return err
+			end
+
+			return nil
+		end
+
+		local firstdocumentname
+		--import the documents from the metadata we just loaded
+		for i, d in ipairs(data.documents) do
+			data.current = data.documents[data.current]
+			if not firstdocumentname then
+				firstdocumentname = d.name
+			end
+
+			if not d.integrated then
+				local e = importdocument(d)
+
+				if e then
+					ModalMessage("Unable to import "..d.name, e)
+					QueueRedraw()
+					data:deleteDocument(d.name)
+
+				--on successful load, prevent overflow of cursor position
+				else
+					if d.cp > #d then
+						d.cp = #d
+					end
+					if d.cw > #d[d.cp] then
+						d.cw = #d[d.cp]
+					end
+					if d.co > #d[d.cp][d.cw] then
+						d.co = #d[d.cp][d.cw]
+					end
+				end
+			end
+		end
+		data:setCurrent(firstdocumentname)
+	end
+
+	return data
+end
+
 function LoadFromStream(filename)
 	local fp, e = io.open(filename, "rb")
 	if not fp then
@@ -566,6 +657,8 @@ function LoadFromStream(filename)
 		loader = loadfromstreamz
 	elseif (magic == TMAGIC) then
 		loader = loadfromstreamt
+	elseif (magic == SMAGIC) then
+		loader = loadfromstreams
 	else
 		fp:close()
 		return nil, ("'"..filename.."' is not a valid WordGrinder file.")
@@ -588,6 +681,7 @@ local function loaddocument(filename)
 	d:clean()
 
 	d.name = filename
+
 	return d
 end
 
@@ -595,6 +689,8 @@ function Cmd.LoadDocumentSet(filename)
 	if not ConfirmDocumentErasure() then
 		return false
 	end
+
+	ResetDocumentSet()
 
 	if not filename then
 		filename = FileBrowser("Load Document Set", "Load file:", false)
@@ -611,6 +707,7 @@ function Cmd.LoadDocumentSet(filename)
 		end
 		ModalMessage("Load failed", e)
 		QueueRedraw()
+		RemoveDocumentSetFromRecents()
 		return false
 	end
 
@@ -620,10 +717,13 @@ function Cmd.LoadDocumentSet(filename)
 		ModalMessage("Cannot load document", "This document belongs to a newer version of " ..
 			"WordGrinder and cannot be loaded. Sorry.")
 		QueueRedraw()
+		RemoveDocumentSetFromRecents()
 		return false
 	end
 
 	DocumentSet = d
+
+
 	Document = d.current
 
 	if (fileformat < FILEFORMAT) then
@@ -632,7 +732,11 @@ function Cmd.LoadDocumentSet(filename)
 
 		DocumentSet.fileformat = FILEFORMAT
 		DocumentSet.menu = CreateMenu()
+	elseif d.name then
+		--Don't set a newly-upgraded document set/session as recent until saved
+		SetMostRecentDocumentSet()
 	end
+
 	FireEvent(Event.RegisterAddons)
 	DocumentSet:touch()
 
@@ -650,6 +754,10 @@ function Cmd.LoadDocumentSet(filename)
 			"save the file again it may not work on the old version. "..
 			"Also, all keybindings defined in this file will get reset "..
 			"to their default values.")
+	end
+
+	if DocumentSet.lastdirectory then
+		lfs.chdir(DocumentSet.lastdirectory)
 	end
 	return true
 end
@@ -708,5 +816,17 @@ function UpgradeDocument(oldversion)
 			end
 		end
 		DocumentSet.styles = nil
+	end
+
+	if (oldversion < 100) then
+		-- This is an Wordgrinder DocumentSet file rather than a session file.
+		-- The session file should be saved elsewhere unless explicitly specified
+                -- by the user to overwrite the DocumentSet file.
+
+		DocumentSet.name = nil
+		for i, d in ipairs(DocumentSet.documents) do
+			d.filename = nil
+			d:touch()
+		end
 	end
 end

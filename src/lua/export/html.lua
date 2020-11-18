@@ -42,7 +42,7 @@ local function callback(writer, document)
 	local settings = DocumentSet.addons.htmlexport
 	local currentpara = nil
 	local islist = false
-	
+
 	function changepara(newpara)
 		local currentstyle = style_tab[currentpara]
 		local newstyle = style_tab[newpara]
@@ -142,11 +142,27 @@ local function callback(writer, document)
 			writer('</html>\n')
 		end
 	})
+
 end
 
-function Cmd.ExportHTMLFile(filename)
-	return ExportFileWithUI(filename, "Export HTML File", ".html",
-		callback)
+
+function Cmd.SaveAsHTMLFile(filename, document)
+	if not document then
+		document = Document
+	end
+	if document.integrated then
+		ModalMessage(nil, "The Scrapbook document cannot be maintained separately to the session file. Try the Export menu if you wish to save an external copy.")
+		QueueRedraw()
+		return false
+	end
+	document.ioFileFormat = GetIoFileFormats().HTML.name
+	return SaveDocument(filename, document)
+end
+
+function Cmd.ExportHTMLFile(filename, document)
+	local success, filename = ExportFileWithUI(filename, "Export HTML File", ".html",
+		callback, document)
+	return success, filename
 end
 
 -----------------------------------------------------------------------------

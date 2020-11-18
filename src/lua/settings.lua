@@ -22,6 +22,7 @@ function LoadGlobalSettings(f)
 
 		FireEvent(Event.RegisterAddons)
 	end
+	RebuildRecentsMenu()
 end
 
 function SaveGlobalSettings(f)

@@ -131,9 +131,12 @@ local function callback(writer, document)
 	})
 end
 
-local function export_odt_with_ui(filename, title, extension)
+local function export_odt_with_ui(filename, title, extension, document)
+	if not document then
+		document = Document
+	end
 	if not filename then
-		filename = Document.name
+		filename = document.name
 		if filename then
 			if not filename:find("%..-$") then
 				filename = filename .. extension
@@ -160,7 +163,7 @@ local function export_odt_with_ui(filename, title, extension)
 	local writer = function(s)
 		content[#content+1] = s
 	end
-	callback(writer, Document)
+	callback(writer, document)
 	content = table_concat(content)
 	
 	local xml =
@@ -328,16 +331,40 @@ local function export_odt_with_ui(filename, title, extension)
 		["content.xml"] = content
 	}
 	
-	if not writezip(filename, xml) then
+	if not writezip(filename..".new", xml) then
 		ModalMessage(nil, "Unable to open the output file "..e..".")
 		QueueRedraw()
 		return false
 	end
-		
+
+	--Do the "filename dance" to give a little extra stability to our limited ODT support...
+	local r, e = os.rename(filename, filename..".old")
+	if not e then
+		r, e = os.rename(filename..".new", filename)
+	end
+	if not e then
+		r, e = os.remove(filename..".old")
+	end
+
 	QueueRedraw()
-	return true
+	return true, filename
 end
 
-function Cmd.ExportODTFile(filename)
-	return export_odt_with_ui(filename, "Export ODT File", ".odt")
+
+function Cmd.SaveAsODTFile(filename, document)
+	if not document then
+		document = Document
+	end
+	if document.integrated then
+		ModalMessage(nil, "The Scrapbook document cannot be maintained separately to the session file. Try the Export menu if you wish to save an external copy.")
+		QueueRedraw()
+		return false
+	end
+	document.ioFileFormat = GetIoFileFormats().OpenDocument.name
+	return SaveDocument(filename, document)
+end
+
+function Cmd.ExportODTFile(filename, document)
+	local success, filename = export_odt_with_ui(filename, "Export ODT File", ".odt", document)
+	return success, filename
 end

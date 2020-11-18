@@ -40,10 +40,14 @@ DocumentSetClass =
 		end
 	end,
 
-	touch = function(self)
+	touch = function(self, documentname)
 		self.changed = true
 		self.justchanged = true
-		Document:touch()
+		if documentname then
+			self.documents[documentname]:touch()
+		else
+			Document:touch()
+		end
 	end,
 
 	clean = function(self)
@@ -53,6 +57,18 @@ DocumentSetClass =
 
 	getDocumentList = function(self)
 		return self.documents
+	end,
+
+	getChangedDocumentList = function(self)
+		local changeddocs = {}
+		local index = 1
+		for i, d in ipairs(self.documents) do
+			if d.changed and not d.integrated then
+				changeddocs[index] = d
+				index = index + 1
+			end
+		end
+		return changeddocs
 	end,
 
 	_findDocument = function(self, name)
@@ -77,6 +93,15 @@ DocumentSetClass =
 		return document
 	end,
 
+	findDocumentByFilename = function(self, filename)
+		for i, d in ipairs(self.documents) do
+			if d.filename == filename then
+				return d
+			end
+		end
+		return nil
+	end,
+
 	addDocument = function(self, document, name, index)
 		document.name = name
 
@@ -87,7 +112,8 @@ DocumentSetClass =
 			self:setCurrent(name)
 		end
 
-		self:touch()
+		self:touch(name)
+		document:clean() --set newly-created document to "unchanged"
 		RebuildDocumentsMenu(self.documents)
 	end,
 
@@ -140,7 +166,9 @@ DocumentSetClass =
 			FireEvent(Event.Changed)
 		end
 
-		Document = self.documents[name]
+		if self.documents[name] then
+			Document = self.documents[name]
+		end
 		if not Document then
 			Document = self.documents[1]
 		end
@@ -159,7 +187,8 @@ DocumentSetClass =
 		self.documents[newname] = d
 		d.name = newname
 
-		self:touch()
+		self:touch(newname)
+		d:clean() --The document name is only stored in session (document set) data
 		RebuildDocumentsMenu(self.documents)
 		return true
 	end,
@@ -269,7 +298,13 @@ DocumentClass =
 	end,
 
 	touch = function(self)
+		self.changed = true
+		self.virgin = false
 		FireEvent(Event.DocumentModified, self)
+	end,
+
+	clean = function(self)
+		self.changed = nil
 	end,
 }
 
@@ -650,6 +685,9 @@ function CreateDocument()
 		cp = 1,
 		cw = 1,
 		co = 1,
+		ioFileFormat= GetIoFileFormats().default.name,
+		changed = nil,
+		filename = nil
 	}
 
 	setmetatable(d, {__index = DocumentClass})

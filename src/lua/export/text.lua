@@ -3,6 +3,7 @@
 -- file in this distribution for the full text.
 
 local function callback(writer, document)
+
 	return ExportFileUsingCallbacks(document,
 	{
 		prologue = function()
@@ -55,9 +56,23 @@ local function callback(writer, document)
 	})
 end
 
-function Cmd.ExportTextFile(filename)
-	return ExportFileWithUI(filename, "Export Text File", ".txt",
-		callback)
+function Cmd.SaveAsTextFile(filename, document)
+	if not document then
+		document = Document
+	end
+	if document.integrated then
+		ModalMessage(nil, "The Scrapbook document cannot be maintained separately to the session file. Try the Export menu if you wish to save an external copy.")
+		QueueRedraw()
+		return false
+	end
+	document.ioFileFormat = GetIoFileFormats().Text.name
+	return SaveDocument(filename, document)
+end
+
+function Cmd.ExportTextFile(filename, document)
+	local success, filename = ExportFileWithUI(filename, "Export Text File", ".txt",
+		callback, document)
+	return success, filename
 end
 
 function Cmd.ExportToTextString()

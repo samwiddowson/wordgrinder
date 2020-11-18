@@ -74,7 +74,7 @@ local function getfilesize(filename)
 	return size
 end
 
-time("Save .wg file", function() Cmd.SaveCurrentDocumentAs("/tmp/temp.wg") end)
+time("Save .wg file", function() Cmd.SaveAllDocuments("/tmp/temp.wg") end)
 print("(size of file: "..getfilesize("/tmp/temp.wg")..")")
 time("Save .html file", function() Cmd.ExportHTMLFile("/tmp/temp.html") end)
 time("Save .odt file", function() Cmd.ExportODTFile("/tmp/temp.odt") end)
@@ -82,7 +82,7 @@ time("Save .txt file", function() Cmd.ExportTextFile("/tmp/temp.txt") end)
 
 print("Performing save/load test...")
 Cmd.LoadDocumentSet("/tmp/temp.wg")
-Cmd.SaveCurrentDocumentAs("/tmp/temq.wg")
+Cmd.SaveAllDocuments("/tmp/temq.wg")
 if (getfilesize("/tmp/temp.wg") ~= getfilesize("/tmp/temq.wg")) then
 	print("*** File sizes do not match in save/load test!")
 end

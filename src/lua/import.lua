@@ -88,7 +88,7 @@ end
 
 -- Does the standard selector-box-and-progress UI for each importer.
 
-function ImportFileWithUI(filename, title, callback)
+function ImportFileWithUI(filename, title, callback, document)
 	if not filename then
 		filename = FileBrowser(title, "Import from:", false)
 		if not filename then
@@ -96,18 +96,56 @@ function ImportFileWithUI(filename, title, callback)
 		end
 	end
 
-	ImmediateMessage("Importing...")
+	local alreadyopendocument = DocumentSet:findDocumentByFilename(filename)
+	if alreadyopendocument then
+		DocumentSet:setCurrent(alreadyopendocument.name)
+		ModalMessage(nil, "This file is already open!")
+		QueueRedraw()
+		return false
+	end
 
-	-- Actually import the file.
+	ImmediateMessage("Importing "..filename.."...")
 
 	local fp = io.open(filename)
 	if not fp then
-		return nil
+		ModalMessage(nil, "The import failed because file "..filename.." could not be opened.")
+		return false
 	end
 
-	local document = callback(fp)
+	local docname = Leafname(filename)
+
 	if not document then
-		ModalMessage(nil, "The import failed, probably because the file could not be found.")
+		document = CreateDocument()
+
+		--we didn't pass a document object in, so the DocumentSet stuff needs handling here
+		if DocumentSet.documents[docname] then
+			local id = 1
+			while true do
+				local f = docname.."-"..id
+				if not DocumentSet.documents[f] then
+					docname = f
+					break
+				end
+			end
+		end
+
+		DocumentSet:addDocument(document, docname)
+
+	end
+
+	if not document.name then
+		document.name = docname
+	end
+
+	-- Actually import the file.
+	local importsuccess, err = callback(fp, document)
+
+	if not importsuccess then
+		local message = "The import of file, "..filename.." failed."
+		if err then
+			message = message.." "..err
+		end
+		ModalMessage(nil, message)
 		QueueRedraw()
 		return false
 	end
@@ -121,22 +159,13 @@ function ImportFileWithUI(filename, title, callback)
 		document:deleteParagraphAt(1)
 	end
 
-	-- Add the document to the document set.
+	document.filename = filename
 
-	local docname = Leafname(filename)
-
-	if DocumentSet.documents[docname] then
-		local id = 1
-		while true do
-			local f = docname.."-"..id
-			if not DocumentSet.documents[f] then
-				docname = f
-				break
-			end
-		end
+	--replace the default document if it was the only one, and it hasn't been touched
+	if (#DocumentSet.documents == 2) and (DocumentSet.documents[1].virgin) then
+		DocumentSet:deleteDocument(DocumentSet.documents[1].name)
 	end
 
-	DocumentSet:addDocument(document, docname)
 	DocumentSet:setCurrent(docname)
 
 	QueueRedraw()
